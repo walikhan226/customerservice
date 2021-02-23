@@ -1,3 +1,5 @@
+import 'package:customerservice/constants/custom_colors.dart';
+import 'package:customerservice/screens/home_screen.dart';
 import 'package:customerservice/screens/login.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +18,6 @@ class Getstarted extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double _width = MediaQuery.of(context).size.width;
-
     final double _height = MediaQuery.of(context).size.height;
 
     font8 = _width * 0.019;
@@ -33,65 +34,90 @@ class Getstarted extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           SizedBox(
             height: 50,
           ),
-          Image.asset(
-            "assets/images/logo-social.png",
-            fit: BoxFit.fill,
-            width: _width,
-            height: _height * 0.3,
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 25),
+              child: Image.asset(
+                "assets/images/logo2.PNG",
+                fit: BoxFit.fill,
+                width: _width * 0.5,
+                height: _height * 0.13,
+              ),
+            ),
           ),
-          Text('Discover the best deals\naround you',
-              textAlign: TextAlign.center, style: TextStyle(fontSize: font20)),
           SizedBox(
             height: _width * 0.2,
           ),
-          Container(
-            width: _width / 1.6,
-            height: _height * 0.08,
-            child: RaisedButton(
-              color: Color(0xFF0072e1),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  side: BorderSide(width: 2, color: Color(0xFF0072e1))),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Login()),
-                );
-              },
-              child: Text(
-                "LOGIN OR REGISTER",
-                style: TextStyle(
+          Column(
+            children: [
+              Container(
+                width: _width / 1.6,
+                height: _height * 0.08,
+                child: RaisedButton(
+                  color: CustomColors.primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: BorderSide(
+                      width: 2,
+                      color: CustomColors.primaryColor,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Login(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "LOGIN OR REGISTER",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: font20,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Container(
+                width: _width / 1.6,
+                height: _height * 0.08,
+                child: RaisedButton(
                   color: Colors.white,
-                  fontSize: font20,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: BorderSide(
+                      width: 2,
+                      color: CustomColors.primaryColor,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomeScreen(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "SKIP FOR NOW",
+                    style: TextStyle(
+                        color: CustomColors.primaryColor,
+                        fontSize: font20,
+                        fontWeight: FontWeight.w600),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-          SizedBox(
-            height: 30,
-          ),
-          Container(
-            width: _width / 1.6,
-            height: _height * 0.08,
-            child: RaisedButton(
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  side: BorderSide(width: 2, color: Color(0xFF0072e1))),
-              onPressed: () {},
-              child: Text(
-                "SKIP FOR NOW",
-                style: TextStyle(
-                  color: Color(0xFF0072e1),
-                  fontSize: font20,
-                ),
-              ),
-            ),
-          )
         ],
       ),
     );

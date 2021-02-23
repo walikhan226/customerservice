@@ -1,15 +1,18 @@
+import 'package:customerservice/repositories/auth_repositories.dart';
+import 'package:customerservice/screens/getstarted.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_plus/flutter_plus.dart';
 import 'package:mailto/mailto.dart';
 
-class Home extends StatefulWidget {
+class Contact extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _ContactState createState() => _ContactState();
 }
 
-class _HomeState extends State<Home> {
+class _ContactState extends State<Contact> {
+  AuthRepository _authRepository = AuthRepository();
   TextEditingController name = new TextEditingController();
   TextEditingController mobile = new TextEditingController();
   TextEditingController location = new TextEditingController();
@@ -130,7 +133,26 @@ class _HomeState extends State<Home> {
             launchMailto();
           },
           child: Text("Open Email"),
-        )
+        ),
+        SizedBox(
+          height: 30,
+        ),
+        RaisedButton(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18.0),
+              side: BorderSide(color: Colors.black)),
+          onPressed: () async {
+            await _authRepository.signOut();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => Getstarted(),
+              ),
+            );
+          },
+          child: Text("Logout"),
+        ),
       ],
     );
   }
