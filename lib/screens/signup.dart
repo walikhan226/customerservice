@@ -1,7 +1,7 @@
 import 'package:customerservice/constants/custom_colors.dart';
 import 'package:customerservice/repositories/auth_repositories.dart';
-import 'package:customerservice/screens/contact.dart';
 import 'package:customerservice/screens/login.dart';
+import 'package:customerservice/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
@@ -69,7 +69,7 @@ class _SignUpState extends State<SignUp> {
         print('Sucessfully registered');
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) {
-          return Contact();
+          return HomeScreen();
         }), (route) => false);
       }
     } catch (e) {
