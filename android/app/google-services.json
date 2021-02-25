@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "436833408393",
+    "project_id": "customer-service-115bd",
+    "storage_bucket": "customer-service-115bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:436833408393:android:071b0ba972e4d015463d58",
+        "android_client_info": {
+          "package_name": "com.remerse.customerservice2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "436833408393-tdfgljlpva90pqh9kmdvj44hnk2f2mu7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.remerse.customerservice2",
+            "certificate_hash": "46fba81af924a7f684c48a8778694cc9cd5bdbd9"
+          }
+        },
+        {
+          "client_id": "436833408393-gias0b043s475ddfeamsv6le57141e3p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDF9LHcvSgAHsUuo06pfpYPQzD-0iYI7yw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "436833408393-gias0b043s475ddfeamsv6le57141e3p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

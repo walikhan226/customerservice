@@ -1,4 +1,4 @@
-package com.example.customerservice
+package com.remerse.customerservice2
 
 import io.flutter.embedding.android.FlutterActivity
 
