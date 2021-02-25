@@ -27,25 +27,19 @@ class _DetailScreenState extends State<DetailScreen> {
         'Mobile Number: ' +
         mobile.text +
         '\n' +
-        'Location: ' +
-        location.text;
+        'Service name: ' +
+        widget.title;
     // add the [https]
     return "https://wa.me/$phone/?text=${Uri.parse(message)}"; // new line
   }
 
   launchMailto() async {
-    String message = 'Name: ' +
-        name.text +
-        '\n' +
-        'Mobile Number: ' +
-        mobile.text +
-        '\n' +
-        'Location: ' +
-        location.text;
+    String message =
+        'Name: ' + name.text + '\n' + 'Mobile Number: ' + mobile.text + '\n';
     final mailtoLink = Mailto(
       to: ['customers@eitmamdom.ae'],
       cc: [''],
-      subject: 'Sample',
+      subject: widget.title,
       body: message,
     );
     // Convert the Mailto instance into a string.
@@ -74,141 +68,164 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Color(0xFF000a32),
-        title: Text(
-          translate(Keys.Contact_Us),
-          style: TextStyle(fontWeight: FontWeight.w600),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(new FocusNode());
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: Colors.white,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Color(0xFF000a32),
+          title: Text(
+            translate(Keys.Contact_Us),
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
-        child: Column(
-          children: [
-            Text(
-              widget.title,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            SizedBox(
-              height: 50,
-            ),
-            Column(
+        body: Padding(
+          padding: EdgeInsets.only(
+              left: screenWidth * 0.05, top: 20, right: screenWidth * 0.05),
+          child: SingleChildScrollView(
+            child: Column(
               children: [
-                TextField(
-                  controller: name,
-                  decoration: InputDecoration(
-                    labelText: translate(Keys.Name),
-                    border: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.blue, width: 4.0),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                Text(
+                  widget.title,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 25,
                 ),
-                TextField(
-                  controller: mobile,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: translate(Keys.Phone_Number),
-                    border: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.blue, width: 4.0),
-                      borderRadius: BorderRadius.circular(10),
+                Column(
+                  children: [
+                    TextField(
+                      controller: name,
+                      decoration: InputDecoration(
+                        labelText: translate(Keys.Name),
+                        border: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: Colors.blue, width: 4.0),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextField(
+                      controller: mobile,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: translate(Keys.Phone_Number),
+                        border: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: Colors.blue, width: 4.0),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextField(
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                        labelText: translate(Keys.Email),
+                        border: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: Colors.blue, width: 4.0),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Expanded(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      buildContactTile(
-                          txt: 'WhatsApp',
-                          image: 'assets/images/whatsapp.png',
-                          height: screenHeight * 0.12,
-                          width: screenWidth * 0.25,
-                          onPressed: () async {
-                            String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-                            RegExp regex1 = new RegExp(pattern);
-                            if (name.text.length < 2 ||
-                                mobile.text.length == 0) {
-                              showInSnackBar("Fields can't be empty");
-                            } else if (!regex1.hasMatch(mobile.text) ||
-                                mobile.text.length < 10) {
-                              showInSnackBar(
-                                  "Please enter valid mobile number");
-                            } else {
+                SizedBox(
+                  height: screenHeight * 0.05,
+                ),
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        buildContactTile(
+                            txt: 'WhatsApp',
+                            image: 'assets/images/whatsapp.png',
+                            height: screenHeight * 0.12,
+                            width: screenWidth * 0.25,
+                            onPressed: () async {
+                              if (name.text.isEmpty) {
+                                showInSnackBar(translate(
+                                  Keys.Name_error,
+                                ));
+                                return;
+                              }
+                              if (mobile.text.isEmpty) {
+                                showInSnackBar(translate(Keys.Phone_error));
+                                return;
+                              }
                               if (await canLaunch(url())) {
                                 await launch(url());
                               } else {
-                                throw 'Could not launch ${url()}';
+                                showInSnackBar("Error");
                               }
-                            }
-                          }),
-                      buildContactTile(
-                        txt: 'Email',
-                        image: 'assets/images/mail.png',
-                        height: screenHeight * 0.12,
-                        width: screenWidth * 0.25,
-                        onPressed: () {
-                          String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-                          RegExp regex1 = new RegExp(pattern);
-                          if (name.text.length < 2 || mobile.text.length == 0) {
-                            showInSnackBar("Fields can't be empty");
-                          } else if (!regex1.hasMatch(mobile.text) ||
-                              mobile.text.length < 10) {
-                            showInSnackBar("Please enter valid mobile number");
-                          } else {
-                            launchMailto();
-                          }
-                        },
-                      ),
-                      buildContactTile(
-                          txt: 'Call',
-                          image: 'assets/images/phone.png',
+                            }),
+                        buildContactTile(
+                          txt: 'Email',
+                          image: 'assets/images/mail.png',
                           height: screenHeight * 0.12,
                           width: screenWidth * 0.25,
                           onPressed: () async {
-                            final url = "tel:+97124412297";
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              throw 'Could not launch $url';
+                            if (name.text.isEmpty) {
+                              showInSnackBar(translate(Keys.Name_error));
+                              return;
                             }
-                          }),
-                    ],
-                  ),
-                ],
-              ),
+                            if (mobile.text.isEmpty) {
+                              showInSnackBar(translate(Keys.Phone_error));
+                              return;
+                            }
+                            if (await canLaunch(url())) {
+                              await launch(url());
+                            } else {
+                              showInSnackBar("Error");
+                            }
+                            launchMailto();
+                          },
+                        ),
+                        buildContactTile(
+                            txt: 'Call',
+                            image: 'assets/images/phone.png',
+                            height: screenHeight * 0.12,
+                            width: screenWidth * 0.25,
+                            onPressed: () async {
+                              final url = "tel:+97124412297";
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              } else {
+                                showInSnackBar("Error");
+                              }
+                            }),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: screenHeight * 0.01,
+                ),
+                Text(
+                  translate(Keys.Company_Name),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: screenWidth * 0.043,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: Text(
-                translate(Keys.Company_Name),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

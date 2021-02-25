@@ -35,6 +35,8 @@ dependencies:
   flutter_translate_annotations: ^1.0.0
   google_sign_in: ^4.5.9
   flutter_toggle_tab: ^0.0.5+4
+  ars_progress_dialog: ^0.1.2
+  flutter_facebook_auth: ^2.0.2
 
 
 dev_dependencies:
@@ -42,7 +44,13 @@ dev_dependencies:
     sdk: flutter
   flutter_translate_gen: ^1.2.1
   build_runner: ^1.7.0
+  
+  flutter_launcher_icons: "^0.8.1"
 
+flutter_icons:
+  image_path: "assets/images/icon.png" 
+  android: true
+  ios: true
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.

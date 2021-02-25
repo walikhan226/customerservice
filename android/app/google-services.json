@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "437417419234",
-    "project_id": "customer-service-a31c3",
-    "storage_bucket": "customer-service-a31c3.appspot.com"
+    "project_number": "436833408393",
+    "project_id": "customer-service-115bd",
+    "storage_bucket": "customer-service-115bd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:437417419234:android:125a6dcc3f722451ed59bb",
+        "mobilesdk_app_id": "1:436833408393:android:071b0ba972e4d015463d58",
         "android_client_info": {
-          "package_name": "com.example.customerservice"
+          "package_name": "com.remerse.customerservice2"
         }
       },
       "oauth_client": [
         {
-          "client_id": "437417419234-cjfmd7dstom8vh11ju4eko4b2i5pqedk.apps.googleusercontent.com",
+          "client_id": "436833408393-tdfgljlpva90pqh9kmdvj44hnk2f2mu7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.customerservice",
-            "certificate_hash": "0586d2a583bbc2e20a87c8b0a98247f1f2ae0320"
+            "package_name": "com.remerse.customerservice2",
+            "certificate_hash": "46fba81af924a7f684c48a8778694cc9cd5bdbd9"
           }
         },
         {
-          "client_id": "437417419234-rsqh7aluh28pcofm4md8vstahu8fqssj.apps.googleusercontent.com",
+          "client_id": "436833408393-gias0b043s475ddfeamsv6le57141e3p.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCJBAPiqIHhLVtxPcX5uae1-IMTCb-p75o"
+          "current_key": "AIzaSyDF9LHcvSgAHsUuo06pfpYPQzD-0iYI7yw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "437417419234-rsqh7aluh28pcofm4md8vstahu8fqssj.apps.googleusercontent.com",
+              "client_id": "436833408393-gias0b043s475ddfeamsv6le57141e3p.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

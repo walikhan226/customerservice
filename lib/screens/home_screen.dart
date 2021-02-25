@@ -45,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.black87,
                         fontSize: 18,
                         fontWeight: FontWeight.w600),
+                    isScroll: false,
                     labels: ["English", "Arabic"],
                     selectedLabelIndex: (index) {
                       index == 0
@@ -235,19 +236,20 @@ Widget listTile(
                 child: Image.asset(
                   image,
                   fit: BoxFit.fill,
-                  width: 60,
-                  height: 80,
+                  width: width * 0.2,
+                  height: height * 0.6,
                 ),
               ),
               Container(
                 width: width * 0.5,
-                margin: const EdgeInsets.only(left: 15),
+                margin:
+                    EdgeInsets.only(left: width * 0.02, right: width * 0.03),
                 child: Text(
                   title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: width * 0.055,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -257,7 +259,7 @@ Widget listTile(
           Text(
             translate(Keys.View),
             style: TextStyle(
-              fontSize: 16,
+              fontSize: width * 0.050,
               fontWeight: FontWeight.w600,
               color: Color(0xFF000a32),
             ),

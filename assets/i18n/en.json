@@ -1,15 +1,22 @@
 {
-    "View": "View",
+    "View": "Order",
     "Contact Us": "Contact Us",
     "Name": "Name",
+    "Email": "Email",
     "Phone Number": "Phone Number",
-    "list1_title": "General services of Tasheel",
-    "list2_title": "General services of Tadbeer",
-    "list3_title": "Health incurance services",
-    "list4_title": "Notary services",
-    "list5_title": "Judicial Department services",
-    "list6_title": "Emirates Id services",
-    "list7_title": "Federal Authority for identity and citizenship services",
-    "list8_title": "Other services",
-    "Company Name": "EITMAM Centers for TASHEEL & TADBEER BAWABET AL SHARQ MALL"
+
+    "list1_title": "Tasheel Services",
+    "list2_title": "Tadbeer Services",
+    "list3_title": "Health Insurance Services",
+    "list4_title": "Notary Services",
+    "list5_title": "Judicial Department Services",
+    "list6_title": "Emirates ID Services",
+    "list7_title": "Federal Authority for Identity and Citizenship Services",
+    "list8_title": "Other Services",
+    "start_btn1":"LOGIN OR REGISTER",
+    "start_btn2":"SKIP FOR NOW",
+    "Name_error":"Please Enter a name",
+    "Phone_error":"Please Enter a number",
+    "Email_error":"Please Enter a email",
+    "Company Name": "EITMAM Centers for (TASHEEL) & (TADBEER), BAWABET AL SHARQ MALL"
 }

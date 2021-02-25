@@ -1,8 +1,8 @@
 import 'package:customerservice/constants/custom_colors.dart';
 import 'package:customerservice/repositories/auth_repositories.dart';
-import 'package:customerservice/screens/login.dart';
-import 'package:customerservice/screens/home_screen.dart';
+
 import 'package:flutter/material.dart';
+import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -59,26 +59,28 @@ class _SignUpState extends State<SignUp> {
   }
 
   Future<void> _signUp() async {
-    setState(() {
-      _isLoading = true;
-    });
+    FocusScope.of(context).requestFocus(new FocusNode());
+    ArsProgressDialog progressDialog = ArsProgressDialog(context,
+        blur: 2,
+        backgroundColor: Color(0x33000000),
+        animationDuration: Duration(milliseconds: 500));
+
+    progressDialog.show();
     try {
-      dynamic result = await _authRepository.signUpWithEmailAndPassword(
+      var result = await _authRepository.signUpWithEmailAndPassword(
           emailController.text, passController.text);
+
+      progressDialog.dismiss();
       if (result != null) {
         print('Sucessfully registered');
-        Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (context) {
-          return HomeScreen();
-        }), (route) => false);
+
+        Navigator.pop(context);
       }
     } catch (e) {
       print(e);
-      showInSnackBar(e.toString());
+      progressDialog.dismiss();
+      showInSnackBar("Error");
     }
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   @override
@@ -87,197 +89,211 @@ class _SignUpState extends State<SignUp> {
     _width = MediaQuery.of(context).size.width;
     _height = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      key: _scaffoldKey,
-      resizeToAvoidBottomInset: false,
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : SizedBox(
-              height: _height - keyboardHeight,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Stack(
-                      children: <Widget>[
-                        Image.asset(
-                          "assets/images/background.png",
-                          fit: BoxFit.fill,
-                          color: CustomColors.primaryColor,
-                          width: _width,
-                          height: _height,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: _height * 0.08, left: _height * 0.05),
-                          child: Text(
-                            "Lets Start",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: _width * 0.12),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(new FocusNode());
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        resizeToAvoidBottomInset: false,
+        body: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : SizedBox(
+                height: _height - keyboardHeight,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      Stack(
+                        children: <Widget>[
+                          Image.asset(
+                            "assets/images/background.png",
+                            fit: BoxFit.fill,
+                            color: CustomColors.primaryColor,
+                            width: _width,
+                            height: _height,
                           ),
-                        ),
-                        Column(
-                          children: [
-                            SizedBox(
-                              height: _height / 3,
-                            ),
-                            Container(
-                              decoration: new BoxDecoration(
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: _height * 0.08, left: _height * 0.05),
+                            child: Text(
+                              "Lets Start",
+                              style: TextStyle(
                                   color: Colors.white,
-                                  borderRadius: new BorderRadius.only(
-                                    topLeft: Radius.circular(40.0),
-                                    topRight: Radius.circular(40.0),
-                                  )),
-                              width: _width,
-                              height: _height / 1.5,
-                              child: Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        top: _height * 0.02,
-                                        left: _height * 0.05),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Text(
-                                          "Sign Up",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: _width * 0.08),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  txtfield(
-                                      txt: "Full Name",
-                                      labelTxt: 'Name',
-                                      controller: nameController),
-                                  txtfield(
-                                      txt: "+92300 0000000",
-                                      labelTxt: 'Number',
-                                      controller: numberController,
-                                      inputType: TextInputType.number),
-                                  txtfield(
-                                      txt: "Example@xyz.com",
-                                      labelTxt: 'Email',
-                                      controller: emailController,
-                                      inputType: TextInputType.emailAddress),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        left: _width * 0.09,
-                                        right: _width * 0.09,
-                                        top: _height * 0.01),
-                                    child: TextField(
-                                      controller: passController,
-                                      obscureText: _passHidden,
-                                      decoration: InputDecoration(
-                                        suffixIcon: GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              _passHidden = !_passHidden;
-                                            });
-                                          },
-                                          child: Icon(
-                                            _passHidden
-                                                ? Icons.visibility_rounded
-                                                : Icons.visibility_off_rounded,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: _width * 0.12),
+                            ),
+                          ),
+                          Column(
+                            children: [
+                              SizedBox(
+                                height: _height / 3,
+                              ),
+                              Container(
+                                decoration: new BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: new BorderRadius.only(
+                                      topLeft: Radius.circular(40.0),
+                                      topRight: Radius.circular(40.0),
+                                    )),
+                                width: _width,
+                                height: _height / 1.3,
+                                child: Column(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          top: _height * 0.02,
+                                          left: _height * 0.05),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Text(
+                                            "Sign Up",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: _width * 0.08),
                                           ),
-                                        ),
-                                        labelText: 'Password',
-                                        hintText: "Password",
-                                        hintStyle: TextStyle(
-                                            fontSize: _width * 0.035,
-                                            color: Color(0xffA7A7A7)),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: _height * 0.035,
-                                  ),
-                                  Padding(
+                                    txtfield(
+                                        txt: "Full Name",
+                                        labelTxt: 'Name',
+                                        controller: nameController),
+                                    txtfield(
+                                        txt: "+92300 0000000",
+                                        labelTxt: 'Number',
+                                        controller: numberController,
+                                        inputType: TextInputType.number),
+                                    txtfield(
+                                        txt: "Example@xyz.com",
+                                        labelTxt: 'Email',
+                                        controller: emailController,
+                                        inputType: TextInputType.emailAddress),
+                                    Padding(
                                       padding: EdgeInsets.only(
                                           left: _width * 0.09,
                                           right: _width * 0.09,
-                                          top: _height * 0.04),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            "Already have an account?",
-                                            style: TextStyle(
-                                                color: Color(0xffFF6A6A)),
-                                          ),
-                                          GestureDetector(
+                                          top: _height * 0.01),
+                                      child: TextField(
+                                        controller: passController,
+                                        obscureText: _passHidden,
+                                        onSubmitted: (v) {
+                                          _signUp();
+                                        },
+                                        decoration: InputDecoration(
+                                          suffixIcon: GestureDetector(
                                             onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => Login(),
-                                                ),
-                                              );
+                                              setState(() {
+                                                _passHidden = !_passHidden;
+                                              });
                                             },
-                                            child: Text(
-                                              "Sign in",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: _width * 0.04,
-                                                  color: Color(0xFF505050)),
+                                            child: Icon(
+                                              _passHidden
+                                                  ? Icons.visibility_rounded
+                                                  : Icons
+                                                      .visibility_off_rounded,
                                             ),
-                                          )
-                                        ],
-                                      )),
-                                ],
+                                          ),
+                                          labelText: 'Password',
+                                          hintText: "Password",
+                                          hintStyle: TextStyle(
+                                              fontSize: _width * 0.035,
+                                              color: Color(0xffA7A7A7)),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: _height * 0.035,
+                                    ),
+                                    Padding(
+                                        padding: EdgeInsets.only(
+                                            left: _width * 0.09,
+                                            right: _width * 0.09,
+                                            top: _height * 0.00),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text(
+                                              "Already have an account?",
+                                              style: TextStyle(
+                                                  color: Color(0xffFF6A6A)),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text(
+                                                "Sign in",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: _width * 0.04,
+                                                    color: Color(0xFF505050)),
+                                              ),
+                                            )
+                                          ],
+                                        )),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        Positioned(
-                          top: _height / 3.4,
-                          left: _width / 1.4,
-                          child: FloatingActionButton(
-                            backgroundColor: CustomColors.primaryColor,
-                            child: Icon(
-                              Icons.arrow_forward,
-                              size: _width * 0.08,
-                            ),
-                            onPressed: () {
-                              String pattern1 = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-                              Pattern pattern2 =
-                                  r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                              RegExp regex1 = new RegExp(pattern1);
-                              RegExp regex2 = new RegExp(pattern2);
-                              if (emailController.text.length < 1 ||
-                                  passController.text.length == 0) {
-                                showInSnackBar("Fields can't be empty");
-                              } else if (nameController.text.length < 2) {
-                                showInSnackBar("Please provide correct name");
-                              } else if (!regex1
-                                      .hasMatch(numberController.text) ||
-                                  numberController.text.length != 13) {
-                                showInSnackBar(
-                                    "Please enter valid mobile number");
-                              } else if (passController.text.length < 6) {
-                                showInSnackBar(
-                                    "Password length can't be less than 6");
-                              } else if (!regex2
-                                  .hasMatch(emailController.text)) {
-                                showInSnackBar("Please enter valid email");
-                              } else {
-                                _signUp();
-                              }
-                            },
+                            ],
                           ),
-                        )
-                      ],
-                    ),
-                  ],
+                          Positioned(
+                            top: _height / 3.4,
+                            left: _width / 1.4,
+                            child: FloatingActionButton(
+                              backgroundColor: CustomColors.primaryColor,
+                              child: Icon(
+                                Icons.arrow_forward,
+                                size: _width * 0.08,
+                              ),
+                              onPressed: () {
+                                String pattern1 = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+                                Pattern pattern2 =
+                                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+                                bool emailValid = RegExp(
+                                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                    .hasMatch(emailController.text);
+
+                                RegExp regex1 = new RegExp(pattern1);
+                                RegExp regex2 = new RegExp(pattern2);
+
+                                if (nameController.text.isEmpty) {
+                                  showInSnackBar("Name field can't be empty");
+                                  return;
+                                }
+                                if (numberController.text.isEmpty) {
+                                  showInSnackBar("Number field can't be empty");
+                                  return;
+                                }
+                                if (emailController.text.isEmpty) {
+                                  showInSnackBar("Email field can't be empty");
+                                  return;
+                                }
+                                if (passController.text.isEmpty) {
+                                  showInSnackBar("Password can't be empty");
+                                  return;
+                                }
+
+                                if (!emailValid) {
+                                  showInSnackBar("Email is invalid");
+                                  return;
+                                }
+
+                                _signUp();
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
+      ),
     );
   }
 }
