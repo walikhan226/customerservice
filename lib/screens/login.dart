@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:customerservice/constants/custom_colors.dart';
 import 'package:customerservice/repositories/auth_repositories.dart';
 import 'package:customerservice/screens/home_screen.dart';
@@ -35,6 +37,79 @@ class _LoginState extends State<Login> {
     User firebaseUser = (await _auth.signInWithCredential(credential)).user;
 
     return firebaseUser;
+  }
+
+  Widget sociallogin() {
+    if (Platform.isAndroid) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          InkWell(
+            onTap: () async {
+              ArsProgressDialog progressDialog = ArsProgressDialog(context,
+                  blur: 2,
+                  backgroundColor: Color(0x33000000),
+                  animationDuration: Duration(milliseconds: 500));
+
+              progressDialog.show();
+              try {
+                var user = await handleSignIn().then((_) {
+                  print(_.toString());
+                  progressDialog.dismiss();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                  );
+
+                  return;
+                });
+              } catch (e) {
+                progressDialog.dismiss();
+                showInSnackBar("Error");
+              }
+            },
+            child: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              radius: _width * 0.07,
+              backgroundImage: AssetImage("assets/images/google.png"),
+            ),
+          ),
+          InkWell(
+            onTap: () async {
+              ArsProgressDialog progressDialog = ArsProgressDialog(context,
+                  blur: 2,
+                  backgroundColor: Color(0x33000000),
+                  animationDuration: Duration(milliseconds: 500));
+
+              progressDialog.show();
+              try {
+                // by default the login method has the next permissions ['email','public_profile']
+                AccessToken accessToken = await FacebookAuth.instance.login();
+                print(accessToken.toJson());
+                // get the user data
+                final userData = await FacebookAuth.instance.getUserData();
+                print(userData);
+                progressDialog.dismiss();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
+              } catch (e) {
+                print(e.message.toString());
+                progressDialog.dismiss();
+              }
+            },
+            child: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              radius: _width * 0.07,
+              backgroundImage: AssetImage("assets/images/facebook.png"),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Container();
+    }
   }
 
   AuthRepository _authRepository = AuthRepository();
@@ -259,90 +334,7 @@ class _LoginState extends State<Login> {
                                             TextStyle(color: Color(0xFFAA9797)),
                                       ),
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        InkWell(
-                                          onTap: () async {
-                                            ArsProgressDialog progressDialog =
-                                                ArsProgressDialog(context,
-                                                    blur: 2,
-                                                    backgroundColor:
-                                                        Color(0x33000000),
-                                                    animationDuration: Duration(
-                                                        milliseconds: 500));
-
-                                            progressDialog.show();
-                                            try {
-                                              var user = await handleSignIn()
-                                                  .then((_) {
-                                                print(_.toString());
-                                                progressDialog.dismiss();
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          HomeScreen()),
-                                                );
-
-                                                return;
-                                              });
-                                            } catch (e) {
-                                              progressDialog.dismiss();
-                                              showInSnackBar("Error");
-                                            }
-                                          },
-                                          child: CircleAvatar(
-                                            backgroundColor: Colors.transparent,
-                                            radius: _width * 0.07,
-                                            backgroundImage: AssetImage(
-                                                "assets/images/google.png"),
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () async {
-                                            ArsProgressDialog progressDialog =
-                                                ArsProgressDialog(context,
-                                                    blur: 2,
-                                                    backgroundColor:
-                                                        Color(0x33000000),
-                                                    animationDuration: Duration(
-                                                        milliseconds: 500));
-
-                                            progressDialog.show();
-                                            try {
-                                              // by default the login method has the next permissions ['email','public_profile']
-                                              AccessToken accessToken =
-                                                  await FacebookAuth.instance
-                                                      .login();
-                                              print(accessToken.toJson());
-                                              // get the user data
-                                              final userData =
-                                                  await FacebookAuth.instance
-                                                      .getUserData();
-                                              print(userData);
-                                              progressDialog.dismiss();
-                                              Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        HomeScreen()),
-                                              );
-                                            } catch (e) {
-                                              print(e.message.toString());
-                                              progressDialog.dismiss();
-                                            }
-                                          },
-                                          child: CircleAvatar(
-                                            backgroundColor: Colors.transparent,
-                                            radius: _width * 0.07,
-                                            backgroundImage: AssetImage(
-                                                "assets/images/facebook.png"),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                    sociallogin(),
                                     Padding(
                                       padding: EdgeInsets.only(
                                         left: _width * 0.09,
