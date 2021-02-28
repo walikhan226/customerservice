@@ -10,7 +10,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="customerservice"
+        android:label="Khalls-ha UAE"
         android:icon="@mipmap/ic_launcher">
        
        
