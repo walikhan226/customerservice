@@ -1,6 +1,8 @@
 import 'package:customerservice/localization/keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mailto/mailto.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -17,7 +19,60 @@ class _DetailScreenState extends State<DetailScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController name = new TextEditingController();
   TextEditingController mobile = new TextEditingController();
-  TextEditingController location = new TextEditingController();
+  TextEditingController email = new TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    getcurrentlocation();
+  }
+
+  String place = "";
+  Future<void> getcurrentlocation() async {
+    try {
+      var data = await _determinePosition();
+      print(data.latitude);
+      print(data.longitude);
+      final coordinates = new Coordinates(data.latitude, data.longitude);
+      var addresses =
+          await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      var first = addresses.first;
+      print(
+          ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+      this.place = first.addressLine;
+
+      print(this.place);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Geolocator.openLocationSettings();
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permantly denied, we cannot request permissions.');
+    }
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        return Future.error(
+            'Location permissions are denied (actual value: $permission).');
+      }
+    }
+
+    return await Geolocator.getCurrentPosition();
+  }
 
   String url() {
     var phone = "+97124412297";
@@ -28,14 +83,31 @@ class _DetailScreenState extends State<DetailScreen> {
         mobile.text +
         '\n' +
         'Service name: ' +
-        widget.title;
+        widget.title +
+        '\n' +
+        "Email: " +
+        email.text +
+        "\n" +
+        "Location: " +
+        this.place;
+
     // add the [https]
     return "https://wa.me/$phone/?text=${Uri.parse(message)}"; // new line
   }
 
   launchMailto() async {
-    String message =
-        'Name: ' + name.text + '\n' + 'Mobile Number: ' + mobile.text + '\n';
+    String message = 'Name: ' +
+        name.text +
+        '\n' +
+        'Mobile Number: ' +
+        mobile.text +
+        '\n' +
+        "Email: " +
+        email.text +
+        "\n" +
+        "Location: " +
+        this.place;
+    ;
     final mailtoLink = Mailto(
       to: ['customers@eitmamdom.ae'],
       cc: [''],
@@ -62,6 +134,15 @@ class _DetailScreenState extends State<DetailScreen> {
           ),
         ),
       );
+  }
+
+  bool isEmail(String em) {
+    String p =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+    RegExp regExp = new RegExp(p);
+
+    return regExp.hasMatch(em);
   }
 
   @override
@@ -131,7 +212,8 @@ class _DetailScreenState extends State<DetailScreen> {
                       height: 20,
                     ),
                     TextField(
-                      keyboardType: TextInputType.name,
+                      controller: email,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         labelText: translate(Keys.Email),
                         border: OutlineInputBorder(
@@ -167,6 +249,15 @@ class _DetailScreenState extends State<DetailScreen> {
                                 showInSnackBar(translate(Keys.Phone_error));
                                 return;
                               }
+
+                              if (email.text.isEmpty) {
+                                showInSnackBar("Email field is empty");
+                                return;
+                              }
+                              if (!isEmail(email.text)) {
+                                showInSnackBar("Invalid email");
+                                return;
+                              }
                               if (await canLaunch(url())) {
                                 await launch(url());
                               } else {
@@ -185,6 +276,14 @@ class _DetailScreenState extends State<DetailScreen> {
                             }
                             if (mobile.text.isEmpty) {
                               showInSnackBar(translate(Keys.Phone_error));
+                              return;
+                            }
+                            if (email.text.isEmpty) {
+                              showInSnackBar("Email field is empty");
+                              return;
+                            }
+                            if (!isEmail(email.text)) {
+                              showInSnackBar("Invalid email");
                               return;
                             }
                             if (await canLaunch(url())) {

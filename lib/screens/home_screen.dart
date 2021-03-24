@@ -1,5 +1,7 @@
 import 'package:customerservice/localization/keys.dart';
+import 'package:customerservice/repositories/auth_repositories.dart';
 import 'package:customerservice/screens/detail_screen.dart';
+import 'package:customerservice/screens/getstarted.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
@@ -11,6 +13,29 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Widget myPopMenu() {
+    return PopupMenuButton(
+        color: Colors.white,
+        icon: Icon(
+          Icons.menu,
+          color: Colors.white,
+        ),
+        onSelected: (value) async {
+          await AuthRepository().signOut().then((_) {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => Getstarted()),
+                (Route<dynamic> route) => false);
+          });
+        },
+        itemBuilder: (context) => [
+              PopupMenuItem(
+                  value: 1,
+                  child: Row(
+                    children: <Widget>[Text('LOGOUT')],
+                  )),
+            ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -27,10 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
-                    Icons.menu_rounded,
-                    color: Colors.white,
-                  ),
+                  myPopMenu(),
                   FlutterToggleTab(
                     width: 50,
                     borderRadius: 30,
