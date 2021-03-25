@@ -8,6 +8,7 @@ import 'package:customerservice/widgets/alert_dialogue.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -54,11 +55,18 @@ class _LoginState extends State<Login> {
               progressDialog.show();
               try {
                 var user = await handleSignIn().then((_) {
-                  print(_.toString());
+                  print(_.email);
+
+                  box.write("email", _.email);
+                  box.write("islogin", true);
+
                   progressDialog.dismiss();
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => HomeScreen(
+                              loggedin: true,
+                            )),
                   );
 
                   return;
@@ -88,11 +96,17 @@ class _LoginState extends State<Login> {
                 print(accessToken.toJson());
                 // get the user data
                 final userData = await FacebookAuth.instance.getUserData();
-                print(userData);
+                print(userData['email']);
+
+                box.write("email", userData['email']);
+                box.write("islogin", true);
                 progressDialog.dismiss();
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => HomeScreen(
+                            loggedin: true,
+                          )),
                 );
               } catch (e) {
                 print(e.message.toString());
@@ -151,6 +165,7 @@ class _LoginState extends State<Login> {
       );
   }
 
+  final box = GetStorage();
   Future<void> signIn() async {
     ArsProgressDialog progressDialog = ArsProgressDialog(context,
         blur: 2,
@@ -159,15 +174,25 @@ class _LoginState extends State<Login> {
 
     progressDialog.show();
     try {
-      dynamic result = await _authRepository.signInWithEmailAndPassword(
+      UserCredential result = await _authRepository.signInWithEmailAndPassword(
           emailController.text, passController.text);
 
       if (result != null) {
         //    this.progressDialog.dismiss();
+
+        progressDialog.dismiss();
         print('Sucessfully logged in');
+        print(result.user.email);
+        print('Sucessfully logged in');
+
+        box.write("email", result.user.email);
+        box.write("islogin", true);
+
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) {
-          return HomeScreen();
+          return HomeScreen(
+            loggedin: true,
+          );
         }), (route) => false);
       } else {
         // this.progressDialog.dismiss();

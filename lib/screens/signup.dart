@@ -162,7 +162,7 @@ class _SignUpState extends State<SignUp> {
                                         labelTxt: 'Name',
                                         controller: nameController),
                                     txtfield(
-                                        txt: "+92300 0000000",
+                                        txt: "+971 xx xxx xxxx",
                                         labelTxt: 'Number',
                                         controller: numberController,
                                         inputType: TextInputType.number),

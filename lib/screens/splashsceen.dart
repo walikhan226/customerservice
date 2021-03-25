@@ -5,6 +5,7 @@ import 'package:customerservice/screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -14,7 +15,7 @@ class SplashScreen extends StatefulWidget {
 class SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   var _visible = true;
-  bool isSigned = false;
+  bool isSigned;
   AnimationController animationController;
   Animation<double> animation;
 
@@ -23,12 +24,17 @@ class SplashScreenState extends State<SplashScreen>
     return new Timer(_duration, navigationPage);
   }
 
+  final box = GetStorage();
+
   void navigationPage() {
+    isSigned = box.read("islogin") ?? false;
     isSigned
         ? Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => HomeScreen(),
+              builder: (BuildContext context) => HomeScreen(
+                loggedin: true,
+              ),
             ),
           )
         : Navigator.pushReplacement(

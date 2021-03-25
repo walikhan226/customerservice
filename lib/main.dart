@@ -5,8 +5,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:flutter_translate/localization_delegate.dart';
 import 'package:flutter_translate/localized_app.dart';
+import 'package:get_storage/get_storage.dart';
 
 void main() async {
+  await GetStorage.init();
   Paint.enableDithering = true;
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -43,9 +45,7 @@ class MyApp extends StatelessWidget {
         ],
         supportedLocales: localizationDelegate.supportedLocales,
         locale: localizationDelegate.currentLocale,
-        theme: ThemeData(
-          fontFamily: 'Cairo'
-        ),
+        theme: ThemeData(fontFamily: 'Cairo'),
         home: SplashScreen(),
       ),
     );

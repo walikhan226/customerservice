@@ -6,13 +6,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:flutter_translate/global.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:meta/meta.dart';
 
 class HomeScreen extends StatefulWidget {
+  bool loggedin;
+  HomeScreen({@required this.loggedin});
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final box = GetStorage();
   Widget myPopMenu() {
     return PopupMenuButton(
         color: Colors.white,
@@ -36,12 +41,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ]);
   }
 
+  GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      key: _drawerKey,
+      endDrawerEnableOpenDragGesture: false,
       backgroundColor: Color(0xFF000a32),
       body: SafeArea(
         child: Column(
@@ -52,7 +60,19 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  myPopMenu(),
+                  widget.loggedin
+                      ? IconButton(
+                          icon: Icon(
+                            Icons.menu,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            _drawerKey.currentState.openDrawer();
+                          },
+                        )
+                      : BackButton(
+                          color: Colors.white,
+                        ),
                   FlutterToggleTab(
                     width: 50,
                     borderRadius: 30,
@@ -216,6 +236,56 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ],
+        ),
+      ),
+      drawer: Drawer(
+        child: Container(
+          child: ListView(
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              ListTile(
+                leading: Icon(Icons.arrow_back_sharp),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Getstarted()),
+                  );
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Center(
+                  child: Text(
+                "Signed in as ",
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+              )),
+              Center(
+                  child: Text(
+                box.read("email") ?? '',
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+              )),
+              ListTile(
+                leading: Icon(Icons.logout),
+                title: Text("Log Out"),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Getstarted()),
+                  );
+                  box.erase();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
