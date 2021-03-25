@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRepository {
@@ -52,16 +53,12 @@ class AuthRepository {
     );
 
     UserCredential result = await _auth.signInWithCredential(credential);
-    // if (result.additionalUserInfo.isNewUser) {
-    //   //User logging in for the first time
-    //   Get.offAndToNamed(SplashScreen.routeName);
-    // } else {
-    //   Get.offNamedUntil(HomeScreen.routeName, (route) => false);
-    // }
     return result;
   }
 
   Future signOut() async {
     await _auth.signOut();
+    await GoogleSignIn().signOut();
+    await FacebookAuth.instance.logOut();
   }
 }

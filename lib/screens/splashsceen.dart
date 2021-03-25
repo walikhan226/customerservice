@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:customerservice/screens/getstarted.dart';
-import 'package:customerservice/screens/home_screen.dart';
+import 'getstarted.dart';
+import 'home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

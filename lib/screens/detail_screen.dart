@@ -1,4 +1,4 @@
-import 'package:customerservice/localization/keys.dart';
+import '../localization/keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:geocoder/geocoder.dart';
@@ -107,7 +107,7 @@ class _DetailScreenState extends State<DetailScreen> {
         "\n" +
         "Location: " +
         this.place;
-    ;
+        
     final mailtoLink = Mailto(
       to: ['customers@eitmamdom.ae'],
       cc: [''],

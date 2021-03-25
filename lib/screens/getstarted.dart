@@ -1,6 +1,6 @@
-import 'package:customerservice/constants/custom_colors.dart';
-import 'package:customerservice/screens/home_screen.dart';
-import 'package:customerservice/screens/login.dart';
+import '../constants/custom_colors.dart';
+import 'home_screen.dart';
+import 'login.dart';
 import 'package:flutter/material.dart';
 
 class Getstarted extends StatelessWidget {
