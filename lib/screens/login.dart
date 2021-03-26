@@ -49,9 +49,6 @@ class _LoginState extends State<Login> {
                   box.write("islogin", true);
 
                   progressDialog.dismiss();
-                  DbRepository().saveUserToDb(
-                    currentUser: FirebaseAuth.instance.currentUser,
-                  );
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -92,9 +89,7 @@ class _LoginState extends State<Login> {
                 box.write("email", userData['email']);
                 box.write("islogin", true);
                 progressDialog.dismiss();
-                DbRepository().saveUserToDb(
-                    currentUser: FirebaseAuth.instance.currentUser,
-                  );
+             
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(

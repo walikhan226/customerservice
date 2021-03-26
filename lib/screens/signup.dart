@@ -72,7 +72,7 @@ class _SignUpState extends State<SignUp> {
       var result = await _authRepository.signUpWithEmailAndPassword(
           emailController.text, passController.text);
       await DbRepository().saveUserToDb(
-        currentUser: FirebaseAuth.instance.currentUser,
+        email: emailController.text,
         name: nameController.text,
         number: numberController.text,
       );
