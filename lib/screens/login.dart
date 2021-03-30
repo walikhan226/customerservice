@@ -12,6 +12,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -41,65 +42,25 @@ class _LoginState extends State<Login> {
   }
 
   Widget sociallogin() {
-    if (Platform.isAndroid) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          InkWell(
-            onTap: () async {
-              ArsProgressDialog progressDialog = ArsProgressDialog(context,
-                  blur: 2,
-                  backgroundColor: Color(0x33000000),
-                  animationDuration: Duration(milliseconds: 500));
+    // if (Platform.isAndroid) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        InkWell(
+          onTap: () async {
+            ArsProgressDialog progressDialog = ArsProgressDialog(context,
+                blur: 2,
+                backgroundColor: Color(0x33000000),
+                animationDuration: Duration(milliseconds: 500));
 
-              progressDialog.show();
-              try {
-                var user = await handleSignIn().then((_) {
-                  print(_.email);
+            progressDialog.show();
+            try {
+              var user = await handleSignIn().then((_) {
+                print(_.email);
 
-                  box.write("email", _.email);
-                  box.write("islogin", true);
-
-                  progressDialog.dismiss();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomeScreen(
-                              loggedin: true,
-                            )),
-                  );
-
-                  return;
-                });
-              } catch (e) {
-                progressDialog.dismiss();
-                showInSnackBar("Error");
-              }
-            },
-            child: CircleAvatar(
-              backgroundColor: Colors.transparent,
-              radius: _width * 0.07,
-              backgroundImage: AssetImage("assets/images/google.png"),
-            ),
-          ),
-          InkWell(
-            onTap: () async {
-              ArsProgressDialog progressDialog = ArsProgressDialog(context,
-                  blur: 2,
-                  backgroundColor: Color(0x33000000),
-                  animationDuration: Duration(milliseconds: 500));
-
-              progressDialog.show();
-              try {
-                // by default the login method has the next permissions ['email','public_profile']
-                AccessToken accessToken = await FacebookAuth.instance.login();
-                print(accessToken.toJson());
-                // get the user data
-                final userData = await FacebookAuth.instance.getUserData();
-                print(userData['email']);
-
-                box.write("email", userData['email']);
+                box.write("email", _.email);
                 box.write("islogin", true);
+
                 progressDialog.dismiss();
                 Navigator.pushReplacement(
                   context,
@@ -108,22 +69,62 @@ class _LoginState extends State<Login> {
                             loggedin: true,
                           )),
                 );
-              } catch (e) {
-                print(e.message.toString());
-                progressDialog.dismiss();
-              }
-            },
-            child: CircleAvatar(
-              backgroundColor: Colors.transparent,
-              radius: _width * 0.07,
-              backgroundImage: AssetImage("assets/images/facebook.png"),
-            ),
+
+                return;
+              });
+            } catch (e) {
+              progressDialog.dismiss();
+              showInSnackBar("Error");
+            }
+          },
+          child: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            radius: _width * 0.07,
+            backgroundImage: AssetImage("assets/images/google.png"),
           ),
-        ],
-      );
-    } else {
+        ),
+        InkWell(
+          onTap: () async {
+            ArsProgressDialog progressDialog = ArsProgressDialog(context,
+                blur: 2,
+                backgroundColor: Color(0x33000000),
+                animationDuration: Duration(milliseconds: 500));
+
+            progressDialog.show();
+            try {
+              // by default the login method has the next permissions ['email','public_profile']
+              AccessToken accessToken = await FacebookAuth.instance.login();
+              print(accessToken.toJson());
+              // get the user data
+              final userData = await FacebookAuth.instance.getUserData();
+              print(userData['email']);
+
+              box.write("email", userData['email']);
+              box.write("islogin", true);
+              progressDialog.dismiss();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => HomeScreen(
+                          loggedin: true,
+                        )),
+              );
+            } catch (e) {
+              print(e.message.toString());
+              progressDialog.dismiss();
+            }
+          },
+          child: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            radius: _width * 0.07,
+            backgroundImage: AssetImage("assets/images/facebook.png"),
+          ),
+        ),
+      ],
+    );
+    /*} else {
       return Container();
-    }
+    }*/
   }
 
   AuthRepository _authRepository = AuthRepository();
@@ -360,6 +361,7 @@ class _LoginState extends State<Login> {
                                       ),
                                     ),
                                     sociallogin(),
+                                    appleLogin(),
                                     Padding(
                                       padding: EdgeInsets.only(
                                         left: _width * 0.09,
@@ -438,5 +440,39 @@ class _LoginState extends State<Login> {
               ),
             ),
           );
+  }
+
+  Widget appleLogin() {
+    return Container(
+      padding: EdgeInsets.only(
+        left: _width * 0.09,
+        right: _width * 0.09,
+      ),
+      child: SignInWithAppleButton(
+        onPressed: () async {
+          final credential = await SignInWithApple.getAppleIDCredential(
+            scopes: [
+              AppleIDAuthorizationScopes.email,
+              AppleIDAuthorizationScopes.fullName,
+            ],
+          );
+
+          print(credential);
+          box.write("email", credential.email);
+          box.write("islogin", true);
+
+          // progressDialog.dismiss();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomeScreen(
+                      loggedin: true,
+                    )),
+          );
+          // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+          // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+        },
+      ),
+    );
   }
 }
