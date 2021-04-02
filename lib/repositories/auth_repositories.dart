@@ -13,6 +13,7 @@ class AuthRepository {
       final user = await _auth.createUserWithEmailAndPassword(
         email: email.trim(),
         password: password,
+        
       );
       return user;
     } on FirebaseAuthException catch (e) {
@@ -28,6 +29,7 @@ class AuthRepository {
       final user = await _auth.signInWithEmailAndPassword(
         email: email.trim(),
         password: password,
+      
       );
       return user;
     } on FirebaseAuthException catch (e) {
