@@ -6,12 +6,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get_storage/get_storage.dart';
-
 import '../constants/custom_colors.dart';
 import '../repositories/auth_repositories.dart';
 import '../repositories/db_repository.dart';
 import 'home_screen.dart';
 import 'signup.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 
 class Login extends StatefulWidget {
   @override
@@ -347,6 +348,7 @@ class _LoginState extends State<Login> {
                                       ),
                                     ),
                                     sociallogin(),
+                                    appleLogin(),
                                     Padding(
                                       padding: EdgeInsets.only(
                                         left: _width * 0.09,
@@ -425,5 +427,39 @@ class _LoginState extends State<Login> {
               ),
             ),
           );
+  }
+
+  Widget appleLogin() {
+    return Container(
+      padding: EdgeInsets.only(
+        left: _width * 0.09,
+        right: _width * 0.09,
+      ),
+      child: SignInWithAppleButton(
+        onPressed: () async {
+          final credential = await SignInWithApple.getAppleIDCredential(
+            scopes: [
+              AppleIDAuthorizationScopes.email,
+              AppleIDAuthorizationScopes.fullName,
+            ],
+          );
+
+          print(credential);
+          box.write("email", credential.email);
+          box.write("islogin", true);
+
+          // progressDialog.dismiss();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomeScreen(
+                      loggedin: true,
+                    )),
+          );
+          // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+          // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+        },
+      ),
+    );
   }
 }
