@@ -1,4 +1,3 @@
-import 'package:customerservice/screens/splashsceen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -6,6 +5,8 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:flutter_translate/localization_delegate.dart';
 import 'package:flutter_translate/localized_app.dart';
 import 'package:get_storage/get_storage.dart';
+
+import 'screens/splashsceen.dart';
 
 void main() async {
   await GetStorage.init();

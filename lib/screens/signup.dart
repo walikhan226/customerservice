@@ -1,5 +1,7 @@
-import 'package:customerservice/constants/custom_colors.dart';
-import 'package:customerservice/repositories/auth_repositories.dart';
+import '../constants/custom_colors.dart';
+import '../repositories/auth_repositories.dart';
+import '../repositories/db_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:ars_progress_dialog/ars_progress_dialog.dart';
@@ -69,12 +71,18 @@ class _SignUpState extends State<SignUp> {
     try {
       var result = await _authRepository.signUpWithEmailAndPassword(
           emailController.text, passController.text);
-
+      await DbRepository().saveUserToDb(
+        email: emailController.text,
+        name: nameController.text,
+        number: numberController.text,
+      );
       progressDialog.dismiss();
+
       if (result != null) {
         print('Sucessfully registered');
 
         Navigator.pop(context);
+        // showInSnackBar("Sucessfully registered, Login now");
       }
     } catch (e) {
       print(e);

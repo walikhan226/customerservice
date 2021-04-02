@@ -1,18 +1,18 @@
 import 'dart:io';
 
-import 'package:customerservice/constants/custom_colors.dart';
-import 'package:customerservice/repositories/auth_repositories.dart';
-import 'package:customerservice/screens/home_screen.dart';
-import 'package:customerservice/screens/signup.dart';
-import 'package:customerservice/widgets/alert_dialogue.dart';
+import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:get_storage/get_storage.dart';
+import '../constants/custom_colors.dart';
+import '../repositories/auth_repositories.dart';
+import '../repositories/db_repository.dart';
+import 'home_screen.dart';
+import 'signup.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 
 class Login extends StatefulWidget {
   @override
@@ -26,42 +26,71 @@ class _LoginState extends State<Login> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GoogleSignIn googleSignIn = GoogleSignIn();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  Future<User> handleSignIn() async {
-    GoogleSignInAccount googleUser = await googleSignIn.signIn();
-    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    User firebaseUser = (await _auth.signInWithCredential(credential)).user;
-
-    return firebaseUser;
-  }
+  final AuthRepository _authRepository = AuthRepository();
 
   Widget sociallogin() {
-    // if (Platform.isAndroid) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        InkWell(
-          onTap: () async {
-            ArsProgressDialog progressDialog = ArsProgressDialog(context,
-                blur: 2,
-                backgroundColor: Color(0x33000000),
-                animationDuration: Duration(milliseconds: 500));
+    if (Platform.isAndroid) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          InkWell(
+            onTap: () async {
+              ArsProgressDialog progressDialog = ArsProgressDialog(context,
+                  blur: 2,
+                  backgroundColor: Color(0x33000000),
+                  animationDuration: Duration(milliseconds: 500));
 
-            progressDialog.show();
-            try {
-              var user = await handleSignIn().then((_) {
-                print(_.email);
+              progressDialog.show();
+              try {
+                var user = await _authRepository.signInWithGoogle().then((_) {
+                  print(_.user.email);
 
-                box.write("email", _.email);
-                box.write("islogin", true);
+                  box.write("email", _.user.email);
+                  box.write("islogin", true);
 
+                  progressDialog.dismiss();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomeScreen(
+                              loggedin: true,
+                            )),
+                  );
+
+                  return;
+                });
+              } catch (e) {
                 progressDialog.dismiss();
+                showInSnackBar("Error");
+              }
+            },
+            child: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              radius: _width * 0.07,
+              backgroundImage: AssetImage("assets/images/google.png"),
+            ),
+          ),
+          InkWell(
+            onTap: () async {
+              ArsProgressDialog progressDialog = ArsProgressDialog(context,
+                  blur: 2,
+                  backgroundColor: Color(0x33000000),
+                  animationDuration: Duration(milliseconds: 500));
+
+              progressDialog.show();
+              try {
+                // by default the login method has the next permissions ['email','public_profile']
+                AccessToken accessToken = await FacebookAuth.instance.login();
+                print(accessToken.toJson());
+                // get the user data
+                final userData = await FacebookAuth.instance.getUserData();
+                print(userData['email']);
+
+                box.write("email", userData['email']);
+                box.write("islogin", true);
+                progressDialog.dismiss();
+
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -69,65 +98,23 @@ class _LoginState extends State<Login> {
                             loggedin: true,
                           )),
                 );
-
-                return;
-              });
-            } catch (e) {
-              progressDialog.dismiss();
-              showInSnackBar("Error");
-            }
-          },
-          child: CircleAvatar(
-            backgroundColor: Colors.transparent,
-            radius: _width * 0.07,
-            backgroundImage: AssetImage("assets/images/google.png"),
+              } catch (e) {
+                print(e.message.toString());
+                progressDialog.dismiss();
+              }
+            },
+            child: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              radius: _width * 0.07,
+              backgroundImage: AssetImage("assets/images/facebook.png"),
+            ),
           ),
-        ),
-        InkWell(
-          onTap: () async {
-            ArsProgressDialog progressDialog = ArsProgressDialog(context,
-                blur: 2,
-                backgroundColor: Color(0x33000000),
-                animationDuration: Duration(milliseconds: 500));
-
-            progressDialog.show();
-            try {
-              // by default the login method has the next permissions ['email','public_profile']
-              AccessToken accessToken = await FacebookAuth.instance.login();
-              print(accessToken.toJson());
-              // get the user data
-              final userData = await FacebookAuth.instance.getUserData();
-              print(userData['email']);
-
-              box.write("email", userData['email']);
-              box.write("islogin", true);
-              progressDialog.dismiss();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => HomeScreen(
-                          loggedin: true,
-                        )),
-              );
-            } catch (e) {
-              print(e.message.toString());
-              progressDialog.dismiss();
-            }
-          },
-          child: CircleAvatar(
-            backgroundColor: Colors.transparent,
-            radius: _width * 0.07,
-            backgroundImage: AssetImage("assets/images/facebook.png"),
-          ),
-        ),
-      ],
-    );
-    /*} else {
+        ],
+      );
+    } else {
       return Container();
-    }*/
+    }
   }
-
-  AuthRepository _authRepository = AuthRepository();
 
   Widget txtfield(
       {String txt,

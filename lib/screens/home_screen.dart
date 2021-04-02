@@ -1,7 +1,9 @@
-import 'package:customerservice/localization/keys.dart';
-import 'package:customerservice/repositories/auth_repositories.dart';
-import 'package:customerservice/screens/detail_screen.dart';
-import 'package:customerservice/screens/getstarted.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../localization/keys.dart';
+import '../repositories/auth_repositories.dart';
+import 'detail_screen.dart';
+import 'getstarted.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
@@ -18,6 +20,23 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final box = GetStorage();
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  Future<void> getData() async {
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .get();
+    print('name : ${documentSnapshot.data()["username"]}');
+    print('email : ${documentSnapshot.data()["email"]}');
+    print('number : ${documentSnapshot.data()["number"]}');
+  }
+
   Widget myPopMenu() {
     return PopupMenuButton(
         color: Colors.white,
