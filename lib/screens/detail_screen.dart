@@ -230,8 +230,8 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
                 Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Wrap(
+                      alignment: WrapAlignment.center,
                       children: [
                         buildContactTile(
                             txt: 'WhatsApp',
@@ -307,6 +307,24 @@ class _DetailScreenState extends State<DetailScreen> {
                                 showInSnackBar("Error");
                               }
                             }),
+                        buildContactTile(
+                            txt: 'Instagram',
+                            image: 'assets/images/insta.png',
+                            height: screenHeight * 0.12,
+                            width: screenWidth * 0.25,
+                            onPressed: () async {
+                              var url =
+                                  'https://www.instagram.com/domestic.ae/';
+
+                              if (await canLaunch(url)) {
+                                await launch(
+                                  url,
+                                  universalLinksOnly: true,
+                                );
+                              } else {
+                                throw 'There was a problem to open the url: $url';
+                              }
+                            }),
                       ],
                     ),
                   ],
@@ -355,9 +373,12 @@ class _DetailScreenState extends State<DetailScreen> {
               borderRadius: BorderRadius.circular(20),
               border: Border.all(width: 2, color: Colors.blue),
             ),
-            child: Image.asset(
-              image,
-              scale: 1.5,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(
+                image,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ],

@@ -26,7 +26,7 @@ class _LoginState extends State<Login> {
   final TextEditingController passController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  final AuthRepository _authRepository =AuthRepository();
+  final AuthRepository _authRepository = AuthRepository();
 
   Widget sociallogin() {
     if (Platform.isAndroid) {
@@ -89,7 +89,7 @@ class _LoginState extends State<Login> {
                 box.write("email", userData['email']);
                 box.write("islogin", true);
                 progressDialog.dismiss();
-             
+
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
