@@ -1,3 +1,5 @@
+import 'package:get_storage/get_storage.dart';
+
 import '../localization/keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -21,10 +23,19 @@ class _DetailScreenState extends State<DetailScreen> {
   TextEditingController mobile = new TextEditingController();
   TextEditingController email = new TextEditingController();
 
+  GetStorage getStorage = GetStorage();
+
   @override
   void initState() {
     super.initState();
     getcurrentlocation();
+    getAndSetDataFromLs();
+  }
+
+  Future<void> getAndSetDataFromLs() async {
+    email.text = await getStorage.read('email') ?? email.text;
+    name.text = await getStorage.read('name') ?? name.text;
+    mobile.text = await getStorage.read('number') ?? mobile.text;
   }
 
   String place = "";
@@ -107,7 +118,7 @@ class _DetailScreenState extends State<DetailScreen> {
         "\n" +
         "Location: " +
         this.place;
-        
+
     final mailtoLink = Mailto(
       to: ['customers@eitmamdom.ae'],
       cc: [''],

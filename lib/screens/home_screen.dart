@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:customerservice/screens/profile_screen.dart';
 import '../localization/keys.dart';
 import '../repositories/auth_repositories.dart';
 import 'detail_screen.dart';
@@ -28,13 +29,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> getData() async {
-    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser.uid)
-        .get();
-    print('name : ${documentSnapshot.data()["username"]}');
-    print('email : ${documentSnapshot.data()["email"]}');
-    print('number : ${documentSnapshot.data()["number"]}');
+    String email = box.read('email');
+    String name = box.read('name');
+    String number = box.read('number');
+    print('name : $name');
+    print('email : $email');
+    print('number : $number');
   }
 
   Widget myPopMenu() {
@@ -261,20 +261,20 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           child: ListView(
             children: [
+              // SizedBox(
+              //   height: 20,
+              // ),
+              // ListTile(
+              //   leading: Icon(Icons.arrow_back_sharp),
+              //   onTap: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(builder: (context) => Getstarted()),
+              //     );
+              //   },
+              // ),
               SizedBox(
-                height: 20,
-              ),
-              ListTile(
-                leading: Icon(Icons.arrow_back_sharp),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Getstarted()),
-                  );
-                },
-              ),
-              SizedBox(
-                height: 20,
+                height: 40,
               ),
               Center(
                   child: Text(
@@ -292,9 +292,33 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Colors.black,
                     fontWeight: FontWeight.bold),
               )),
+              SizedBox(
+                height: 20,
+              ),
+              ListTile(
+                leading: Icon(Icons.person_rounded),
+                title: Text(
+                  translate(Keys.Profile),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfileScreen()),
+                  );
+                  box.erase();
+                },
+              ),
               ListTile(
                 leading: Icon(Icons.logout),
-                title: Text("Log Out"),
+                title: Text(
+                  translate(Keys.Logout),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 onTap: () {
                   Navigator.push(
                     context,

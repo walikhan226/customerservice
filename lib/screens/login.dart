@@ -41,7 +41,8 @@ class _LoginState extends State<Login> {
 
             progressDialog.show();
             try {
-              var user = await _authRepository.signInWithGoogle().then((_) {
+              var user =
+                  await _authRepository.signInWithGoogle().then((_) async {
                 print(_.user.email);
 
                 box.write("email", _.user.email);
