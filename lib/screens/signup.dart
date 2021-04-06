@@ -86,6 +86,7 @@ class _SignUpState extends State<SignUp> {
         await getStorage.write('email', emailController.text);
         await getStorage.write('name', nameController.text);
         await getStorage.write('number', numberController.text);
+        await getStorage.write('password', passController.text);
 
         Navigator.pop(context);
         // showInSnackBar("Sucessfully registered, Login now");
@@ -264,16 +265,9 @@ class _SignUpState extends State<SignUp> {
                                 size: _width * 0.08,
                               ),
                               onPressed: () {
-                                String pattern1 = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-                                Pattern pattern2 =
-                                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-
                                 bool emailValid = RegExp(
                                         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                                     .hasMatch(emailController.text);
-
-                                RegExp regex1 = new RegExp(pattern1);
-                                RegExp regex2 = new RegExp(pattern2);
 
                                 if (nameController.text.isEmpty) {
                                   showInSnackBar("Name field can't be empty");

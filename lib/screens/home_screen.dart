@@ -32,9 +32,11 @@ class _HomeScreenState extends State<HomeScreen> {
     String email = box.read('email');
     String name = box.read('name');
     String number = box.read('number');
+    String password = box.read('password');
     print('name : $name');
     print('email : $email');
     print('number : $number');
+    print('password : $password');
   }
 
   Widget myPopMenu() {

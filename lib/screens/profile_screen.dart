@@ -97,12 +97,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  snapshot.data.data()['email'] ?? '',
-                                  style: TextStyle(
-                                    fontSize: screenHeight * 0.025,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
+                                Container(
+                                  constraints: BoxConstraints(maxWidth: 220),
+                                  child: Text(
+                                    snapshot.data.data()['email'] ?? '',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    softWrap: true,
+                                    style: TextStyle(
+                                      fontSize: screenHeight * 0.025,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                                 SizedBox(
@@ -120,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   height: screenHeight * 0.015,
                                 ),
                                 Text(
-                                  snapshot.data.data()['number'],
+                                  snapshot.data.data()['number'] ?? '',
                                   style: TextStyle(
                                     fontSize: screenHeight * 0.025,
                                     color: Colors.black,

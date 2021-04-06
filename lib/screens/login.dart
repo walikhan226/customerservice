@@ -46,6 +46,8 @@ class _LoginState extends State<Login> {
                 print(_.user.email);
 
                 box.write("email", _.user.email);
+                box.write("name", _.user.displayName);
+                box.write("number", _.user.phoneNumber);
                 box.write("islogin", true);
 
                 progressDialog.dismiss();
@@ -84,7 +86,6 @@ class _LoginState extends State<Login> {
               print(accessToken.toJson());
               // get the user data
               final userData = await FacebookAuth.instance.getUserData();
-              print(userData['email']);
 
               box.write("email", userData['email']);
               box.write("islogin", true);
@@ -93,9 +94,10 @@ class _LoginState extends State<Login> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => HomeScreen(
-                          loggedin: true,
-                        )),
+                  builder: (context) => HomeScreen(
+                    loggedin: true,
+                  ),
+                ),
               );
             } catch (e) {
               print(e.message.toString());
