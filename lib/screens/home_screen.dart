@@ -68,267 +68,273 @@ class _HomeScreenState extends State<HomeScreen> {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      key: _drawerKey,
-      endDrawerEnableOpenDragGesture: false,
-      backgroundColor: Color(0xFF000a32),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  right: 10, left: 10, top: 20, bottom: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  widget.loggedin
-                      ? IconButton(
-                          icon: Icon(
-                            Icons.menu,
+    return WillPopScope(
+      onWillPop: () {
+        return;
+      },
+      child: Scaffold(
+        key: _drawerKey,
+        endDrawerEnableOpenDragGesture: false,
+        backgroundColor: Color(0xFF000a32),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    right: 10, left: 10, top: 20, bottom: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    widget.loggedin
+                        ? IconButton(
+                            icon: Icon(
+                              Icons.menu,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              _drawerKey.currentState.openDrawer();
+                            },
+                          )
+                        : BackButton(
                             color: Colors.white,
                           ),
-                          onPressed: () {
-                            _drawerKey.currentState.openDrawer();
-                          },
-                        )
-                      : BackButton(
+                    FlutterToggleTab(
+                      width: 50,
+                      borderRadius: 30,
+                      height: 40,
+                      initialIndex: 0,
+                      selectedBackgroundColors: [const Color(0xFF0A3157)],
+                      selectedTextStyle: TextStyle(
                           color: Colors.white,
-                        ),
-                  FlutterToggleTab(
-                    width: 50,
-                    borderRadius: 30,
-                    height: 40,
-                    initialIndex: 0,
-                    selectedBackgroundColors: [const Color(0xFF0A3157)],
-                    selectedTextStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600),
-                    unSelectedTextStyle: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600),
-                    isScroll: false,
-                    labels: ["English", "Arabic"],
-                    selectedLabelIndex: (index) {
-                      index == 0
-                          ? changeLocale(context, 'en_US')
-                          : changeLocale(context, 'ar');
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Container(
-                width: screenWidth,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                ),
-                child: ListView(
-                  padding: const EdgeInsets.only(right: 10, left: 10, top: 15),
-                  children: [
-                    listTile(
-                      height: screenHeight * 0.15,
-                      width: screenWidth * 0.8,
-                      context: context,
-                      title: translate(Keys.List1_Title),
-                      image: 'assets/images/1.jpeg',
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return DetailScreen(
-                            title: translate(Keys.List1_Title),
-                          );
-                        }));
-                      },
-                    ),
-                    listTile(
-                      height: screenHeight * 0.15,
-                      width: screenWidth * 0.8,
-                      context: context,
-                      title: translate(Keys.List2_Title),
-                      image: 'assets/images/2.jpeg',
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return DetailScreen(
-                            title: translate(Keys.List2_Title),
-                          );
-                        }));
-                      },
-                    ),
-                    listTile(
-                      height: screenHeight * 0.15,
-                      width: screenWidth * 0.8,
-                      context: context,
-                      title: translate(Keys.List3_Title),
-                      image: 'assets/images/3.jpeg',
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return DetailScreen(
-                            title: translate(Keys.List3_Title),
-                          );
-                        }));
-                      },
-                    ),
-                    listTile(
-                      height: screenHeight * 0.15,
-                      width: screenWidth * 0.8,
-                      context: context,
-                      title: translate(Keys.List4_Title),
-                      image: 'assets/images/4.jpeg',
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return DetailScreen(
-                            title: translate(Keys.List4_Title),
-                          );
-                        }));
-                      },
-                    ),
-                    listTile(
-                      height: screenHeight * 0.15,
-                      width: screenWidth * 0.8,
-                      context: context,
-                      title: translate(Keys.List5_Title),
-                      image: 'assets/images/5.jpeg',
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return DetailScreen(
-                            title: translate(Keys.List5_Title),
-                          );
-                        }));
-                      },
-                    ),
-                    listTile(
-                      height: screenHeight * 0.15,
-                      width: screenWidth * 0.8,
-                      context: context,
-                      title: translate(Keys.List6_Title),
-                      image: 'assets/images/6.jpeg',
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return DetailScreen(
-                            title: translate(Keys.List5_Title),
-                          );
-                        }));
-                      },
-                    ),
-                    listTile(
-                      height: screenHeight * 0.15,
-                      width: screenWidth * 0.8,
-                      context: context,
-                      title: translate(Keys.List7_Title),
-                      image: 'assets/images/6.jpeg',
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return DetailScreen(
-                            title: translate(Keys.List7_Title),
-                          );
-                        }));
-                      },
-                    ),
-                    listTile(
-                      height: screenHeight * 0.15,
-                      width: screenWidth * 0.8,
-                      context: context,
-                      title: translate(Keys.List8_Title),
-                      image: 'assets/images/8.jpeg',
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return DetailScreen(
-                            title: translate(Keys.List8_Title),
-                          );
-                        }));
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                      unSelectedTextStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                      isScroll: false,
+                      labels: ["English", "Arabic"],
+                      selectedLabelIndex: (index) {
+                        index == 0
+                            ? changeLocale(context, 'en_US')
+                            : changeLocale(context, 'ar');
                       },
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-      drawer: Drawer(
-        child: Container(
-          child: ListView(
-            children: [
-              // SizedBox(
-              //   height: 20,
-              // ),
-              // ListTile(
-              //   leading: Icon(Icons.arrow_back_sharp),
-              //   onTap: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(builder: (context) => Getstarted()),
-              //     );
-              //   },
-              // ),
-              SizedBox(
-                height: 40,
-              ),
-              Center(
-                  child: Text(
-                "Signed in as ",
-                style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-              )),
-              Center(
-                  child: Text(
-                box.read("email") ?? '',
-                style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-              )),
-              SizedBox(
-                height: 20,
-              ),
-              ListTile(
-                leading: Icon(Icons.person_rounded),
-                title: Text(
-                  translate(Keys.Profile),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
+              Expanded(
+                child: Container(
+                  width: screenWidth,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: ListView(
+                    padding:
+                        const EdgeInsets.only(right: 10, left: 10, top: 15),
+                    children: [
+                      listTile(
+                        height: screenHeight * 0.15,
+                        width: screenWidth * 0.8,
+                        context: context,
+                        title: translate(Keys.List1_Title),
+                        image: 'assets/images/1.jpeg',
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return DetailScreen(
+                              title: translate(Keys.List1_Title),
+                            );
+                          }));
+                        },
+                      ),
+                      listTile(
+                        height: screenHeight * 0.15,
+                        width: screenWidth * 0.8,
+                        context: context,
+                        title: translate(Keys.List2_Title),
+                        image: 'assets/images/2.jpeg',
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return DetailScreen(
+                              title: translate(Keys.List2_Title),
+                            );
+                          }));
+                        },
+                      ),
+                      listTile(
+                        height: screenHeight * 0.15,
+                        width: screenWidth * 0.8,
+                        context: context,
+                        title: translate(Keys.List3_Title),
+                        image: 'assets/images/3.jpeg',
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return DetailScreen(
+                              title: translate(Keys.List3_Title),
+                            );
+                          }));
+                        },
+                      ),
+                      listTile(
+                        height: screenHeight * 0.15,
+                        width: screenWidth * 0.8,
+                        context: context,
+                        title: translate(Keys.List4_Title),
+                        image: 'assets/images/4.jpeg',
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return DetailScreen(
+                              title: translate(Keys.List4_Title),
+                            );
+                          }));
+                        },
+                      ),
+                      listTile(
+                        height: screenHeight * 0.15,
+                        width: screenWidth * 0.8,
+                        context: context,
+                        title: translate(Keys.List5_Title),
+                        image: 'assets/images/5.jpeg',
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return DetailScreen(
+                              title: translate(Keys.List5_Title),
+                            );
+                          }));
+                        },
+                      ),
+                      listTile(
+                        height: screenHeight * 0.15,
+                        width: screenWidth * 0.8,
+                        context: context,
+                        title: translate(Keys.List6_Title),
+                        image: 'assets/images/6.jpeg',
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return DetailScreen(
+                              title: translate(Keys.List5_Title),
+                            );
+                          }));
+                        },
+                      ),
+                      listTile(
+                        height: screenHeight * 0.15,
+                        width: screenWidth * 0.8,
+                        context: context,
+                        title: translate(Keys.List7_Title),
+                        image: 'assets/images/6.jpeg',
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return DetailScreen(
+                              title: translate(Keys.List7_Title),
+                            );
+                          }));
+                        },
+                      ),
+                      listTile(
+                        height: screenHeight * 0.15,
+                        width: screenWidth * 0.8,
+                        context: context,
+                        title: translate(Keys.List8_Title),
+                        image: 'assets/images/8.jpeg',
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return DetailScreen(
+                              title: translate(Keys.List8_Title),
+                            );
+                          }));
+                        },
+                      ),
+                    ],
                   ),
                 ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProfileScreen()),
-                  );
-                  box.erase();
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.logout),
-                title: Text(
-                  translate(Keys.Logout),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => Getstarted()),
-                      (Route<dynamic> route) => false);
-                  box.erase();
-                },
               ),
             ],
+          ),
+        ),
+        drawer: Drawer(
+          child: Container(
+            child: ListView(
+              children: [
+                // SizedBox(
+                //   height: 20,
+                // ),
+                // ListTile(
+                //   leading: Icon(Icons.arrow_back_sharp),
+                //   onTap: () {
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(builder: (context) => Getstarted()),
+                //     );
+                //   },
+                // ),
+                SizedBox(
+                  height: 40,
+                ),
+                Center(
+                    child: Text(
+                  "Signed in as ",
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                )),
+                Center(
+                    child: Text(
+                  box.read("email") ?? '',
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                )),
+                SizedBox(
+                  height: 20,
+                ),
+                ListTile(
+                  leading: Icon(Icons.person_rounded),
+                  title: Text(
+                    translate(Keys.Profile),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProfileScreen()),
+                    );
+                    //  box.erase();
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.logout),
+                  title: Text(
+                    translate(Keys.Logout),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => Getstarted()),
+                        (Route<dynamic> route) => false);
+                    box.erase();
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

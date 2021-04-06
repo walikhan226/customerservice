@@ -56,40 +56,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  translate(Keys.Email),
-                                  style: TextStyle(
-                                    fontSize: screenHeight * 0.025,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      translate(Keys.Email),
+                                      style: TextStyle(
+                                        fontSize: screenHeight * 0.025,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: screenHeight * 0.015,
+                                    ),
+                                    Text(
+                                      translate(Keys.Name),
+                                      style: TextStyle(
+                                        fontSize: screenHeight * 0.025,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: screenHeight * 0.015,
+                                    ),
+                                    Text(
+                                      translate(Keys.Phone_Number),
+                                      style: TextStyle(
+                                        fontSize: screenHeight * 0.025,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(
-                                  height: screenHeight * 0.015,
-                                ),
-                                Text(
-                                  translate(Keys.Name),
-                                  style: TextStyle(
-                                    fontSize: screenHeight * 0.025,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: screenHeight * 0.015,
-                                ),
-                                Text(
-                                  translate(Keys.Phone_Number),
-                                  style: TextStyle(
-                                    fontSize: screenHeight * 0.025,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                             const SizedBox(
                               width: 50,
@@ -115,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   height: screenHeight * 0.015,
                                 ),
                                 Text(
-                                  snapshot.data.data()['username'],
+                                  snapshot.data.data()['username'] ?? '',
                                   style: TextStyle(
                                     fontSize: screenHeight * 0.025,
                                     color: Colors.black,
@@ -148,9 +153,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               emailController.text =
                                   snapshot.data.data()['email'] ?? '';
                               nameController.text =
-                                  snapshot.data.data()['username'];
+                                  snapshot.data.data()['username'] ?? '';
                               numberController.text =
-                                  snapshot.data.data()['number'];
+                                  snapshot.data.data()['number'] ?? '';
                             });
                           },
                           child: Container(

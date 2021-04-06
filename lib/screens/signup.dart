@@ -195,7 +195,7 @@ class _SignUpState extends State<SignUp> {
                                         controller: passController,
                                         obscureText: _passHidden,
                                         onSubmitted: (v) {
-                                          _signUp();
+                                          //   _signUp();
                                         },
                                         decoration: InputDecoration(
                                           suffixIcon: GestureDetector(
@@ -282,11 +282,6 @@ class _SignUpState extends State<SignUp> {
                                   return;
                                 }
 
-                                if (passController.text.length <= 8) {
-                                  showInSnackBar(
-                                      "Password length should be at least 8 length");
-                                  return;
-                                }
                                 if (passController.text.isEmpty) {
                                   showInSnackBar("Password can't be empty");
                                   return;
@@ -297,6 +292,11 @@ class _SignUpState extends State<SignUp> {
                                   return;
                                 }
 
+                                if (passController.text.length >= 8) {
+                                  showInSnackBar(
+                                      "Password length should be at least 8 length");
+                                  return;
+                                }
                                 _signUp();
                               },
                             ),

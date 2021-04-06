@@ -87,7 +87,9 @@ class _LoginState extends State<Login> {
               // get the user data
               final userData = await FacebookAuth.instance.getUserData();
 
+              print(userData);
               box.write("email", userData['email']);
+              box.write("name", userData['name']);
               box.write("islogin", true);
               progressDialog.dismiss();
 
