@@ -1,3 +1,5 @@
+import 'package:get_storage/get_storage.dart';
+
 import '../constants/custom_colors.dart';
 import '../repositories/auth_repositories.dart';
 import '../repositories/db_repository.dart';
@@ -79,7 +81,11 @@ class _SignUpState extends State<SignUp> {
       progressDialog.dismiss();
 
       if (result != null) {
+        GetStorage getStorage = GetStorage();
         print('Sucessfully registered');
+        await getStorage.write('email', emailController.text);
+        await getStorage.write('name', nameController.text);
+        await getStorage.write('number', numberController.text);
 
         Navigator.pop(context);
         // showInSnackBar("Sucessfully registered, Login now");
@@ -279,6 +285,12 @@ class _SignUpState extends State<SignUp> {
                                 }
                                 if (emailController.text.isEmpty) {
                                   showInSnackBar("Email field can't be empty");
+                                  return;
+                                }
+
+                                if (passController.text.length <= 8) {
+                                  showInSnackBar(
+                                      "Password length should be at least 8 length");
                                   return;
                                 }
                                 if (passController.text.isEmpty) {

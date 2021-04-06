@@ -1,9 +1,13 @@
 {
     "View": "Order",
     "Contact Us": "Contact Us",
+    "Profile": "Profile",
     "Name": "Name",
     "Email": "Email",
     "Phone Number": "Phone Number",
+    "Update": "Update",
+    "Done": "Done",
+    "Logout": "Logout",
 
     "list1_title": "Tasheel Services",
     "list2_title": "Tadbeer Services",

@@ -12,6 +12,10 @@ class Keys {
   static const String Phone_error = 'Please Enter a phone number';
   static const String Email_error = 'Please Enter a email';
   static const String Contact_Us = 'Contact Us';
+  static const String Profile = 'Profile';
+  static const String Update= 'Update';
+  static const String Done = 'Done';
+  static const String Logout = 'Logout';
 
   static const String Name = 'Name';
   static const String Email = 'Email';
