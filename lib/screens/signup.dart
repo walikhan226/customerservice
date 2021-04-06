@@ -287,6 +287,12 @@ class _SignUpState extends State<SignUp> {
                                   showInSnackBar("Email field can't be empty");
                                   return;
                                 }
+
+                                if (passController.text.length <= 8) {
+                                  showInSnackBar(
+                                      "Password length should be at least 8 length");
+                                  return;
+                                }
                                 if (passController.text.isEmpty) {
                                   showInSnackBar("Password can't be empty");
                                   return;

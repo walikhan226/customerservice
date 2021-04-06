@@ -33,9 +33,9 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   Future<void> getAndSetDataFromLs() async {
-    email.text = await getStorage.read('email') ?? email.text;
-    name.text = await getStorage.read('name') ?? name.text;
-    mobile.text = await getStorage.read('number') ?? mobile.text;
+    email.text = await getStorage.read('email') ?? "";
+    name.text = await getStorage.read('name') ?? "";
+    mobile.text = await getStorage.read('number') ?? "";
   }
 
   String place = "";

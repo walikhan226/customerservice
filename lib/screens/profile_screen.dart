@@ -43,125 +43,131 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                 }
                 print(snapshot.data.data());
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // CircleAvatar(
-                    //   backgroundImage:snapshot.data.data()['imageUrl'] AssetImage('assets/images/profile.jpeg'),
-                    // ),
-                    Row(
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 50),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        // CircleAvatar(
+                        //   backgroundImage:snapshot.data.data()['imageUrl'] AssetImage('assets/images/profile.jpeg'),
+                        // ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              translate(Keys.Email),
-                              style: TextStyle(
-                                fontSize: screenHeight * 0.025,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w600,
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  translate(Keys.Email),
+                                  style: TextStyle(
+                                    fontSize: screenHeight * 0.025,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: screenHeight * 0.015,
+                                ),
+                                Text(
+                                  translate(Keys.Name),
+                                  style: TextStyle(
+                                    fontSize: screenHeight * 0.025,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: screenHeight * 0.015,
+                                ),
+                                Text(
+                                  translate(Keys.Phone_Number),
+                                  style: TextStyle(
+                                    fontSize: screenHeight * 0.025,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
-                            SizedBox(
-                              height: screenHeight * 0.015,
+                            const SizedBox(
+                              width: 50,
                             ),
-                            Text(
-                              translate(Keys.Name),
-                              style: TextStyle(
-                                fontSize: screenHeight * 0.025,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(
-                              height: screenHeight * 0.015,
-                            ),
-                            Text(
-                              translate(Keys.Phone_Number),
-                              style: TextStyle(
-                                fontSize: screenHeight * 0.025,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w600,
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  snapshot.data.data()['email'] ?? '',
+                                  style: TextStyle(
+                                    fontSize: screenHeight * 0.025,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: screenHeight * 0.015,
+                                ),
+                                Text(
+                                  snapshot.data.data()['username'],
+                                  style: TextStyle(
+                                    fontSize: screenHeight * 0.025,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: screenHeight * 0.015,
+                                ),
+                                Text(
+                                  snapshot.data.data()['number'],
+                                  style: TextStyle(
+                                    fontSize: screenHeight * 0.025,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: screenHeight * 0.015,
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          width: 50,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              snapshot.data.data()['email'],
+                        SizedBox(height: screenHeight * 0.1),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isProfileUpdating = true;
+                              emailController.text =
+                                  snapshot.data.data()['email'] ?? '';
+                              nameController.text =
+                                  snapshot.data.data()['username'];
+                              numberController.text =
+                                  snapshot.data.data()['number'];
+                            });
+                          },
+                          child: Container(
+                            height: screenHeight * 0.07,
+                            width: screenWidth * 0.8,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF000a32),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              translate(Keys.Update),
                               style: TextStyle(
                                 fontSize: screenHeight * 0.025,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(
-                              height: screenHeight * 0.015,
-                            ),
-                            Text(
-                              snapshot.data.data()['username'],
-                              style: TextStyle(
-                                fontSize: screenHeight * 0.025,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(
-                              height: screenHeight * 0.015,
-                            ),
-                            Text(
-                              snapshot.data.data()['number'],
-                              style: TextStyle(
-                                fontSize: screenHeight * 0.025,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(
-                              height: screenHeight * 0.015,
-                            ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
-                    SizedBox(height: screenHeight * 0.1),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isProfileUpdating = true;
-                          emailController.text = snapshot.data.data()['email'];
-                          nameController.text =
-                              snapshot.data.data()['username'];
-                          numberController.text =
-                              snapshot.data.data()['number'];
-                        });
-                      },
-                      child: Container(
-                        height: screenHeight * 0.07,
-                        width: screenWidth * 0.8,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: Color(0xFF000a32),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          translate(Keys.Update),
-                          style: TextStyle(
-                            fontSize: screenHeight * 0.025,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 );
               })
           : Padding(
