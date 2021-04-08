@@ -94,7 +94,7 @@ class _SignUpState extends State<SignUp> {
     } catch (e) {
       print(e);
       progressDialog.dismiss();
-      showInSnackBar("Error");
+      showInSnackBar(e.toString());
     }
   }
 
@@ -292,7 +292,7 @@ class _SignUpState extends State<SignUp> {
                                   return;
                                 }
 
-                                if (passController.text.length >= 8) {
+                                if (passController.text.length <= 7) {
                                   showInSnackBar(
                                       "Password length should be at least 8 length");
                                   return;
