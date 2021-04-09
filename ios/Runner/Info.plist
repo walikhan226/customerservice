@@ -36,9 +36,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs access to location when in the background.</string>
+	<string>Your location will be shared with the information in Contact Us form/ profile
+
+            For pick up service of the customer document and to verify the lead/inquiry as this app provide government application services for United Arab Emirates residents.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open.</string>
+	<string>Your location will be shared with the information in Contact Us form/ profile
+
+            For pick up service of the customer document and to verify the lead/inquiry as this app provide government application services for United Arab Emirates residents</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
