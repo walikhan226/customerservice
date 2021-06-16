@@ -1,4 +1,11 @@
+import 'package:customerservice/constants/custom_colors.dart';
+import 'package:customerservice/models/order_model.dart';
+import 'package:customerservice/repositories/db_repository.dart';
+import 'package:customerservice/screens/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 
 import '../localization/keys.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +31,7 @@ class _DetailScreenState extends State<DetailScreen> {
   TextEditingController email = new TextEditingController();
 
   GetStorage getStorage = GetStorage();
+  var repo = DbRepository();
 
   @override
   void initState() {
@@ -169,7 +177,7 @@ class _DetailScreenState extends State<DetailScreen> {
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: Color(0xFF000a32),
+          backgroundColor: CustomColors.primaryColor,
           title: Text(
             translate(Keys.Contact_Us),
             style: TextStyle(fontWeight: FontWeight.w600),
@@ -198,8 +206,8 @@ class _DetailScreenState extends State<DetailScreen> {
                       decoration: InputDecoration(
                         labelText: translate(Keys.Name),
                         border: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.blue, width: 4.0),
+                          borderSide: const BorderSide(
+                              color: Color(0xffff0000), width: 4.0),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
@@ -213,8 +221,8 @@ class _DetailScreenState extends State<DetailScreen> {
                       decoration: InputDecoration(
                         labelText: translate(Keys.Phone_Number),
                         border: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.blue, width: 4.0),
+                          borderSide: const BorderSide(
+                              color: Color(0xffff0000), width: 4.0),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
@@ -228,8 +236,8 @@ class _DetailScreenState extends State<DetailScreen> {
                       decoration: InputDecoration(
                         labelText: translate(Keys.Email),
                         border: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.blue, width: 4.0),
+                          borderSide: const BorderSide(
+                              color: Color(0xffff0000), width: 4.0),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
@@ -270,7 +278,8 @@ class _DetailScreenState extends State<DetailScreen> {
                                 return;
                               }
                               if (await canLaunch(url())) {
-                                await launch(url());
+                                await saveOrder(url(), false);
+                                // await launch(url());
                               } else {
                                 showInSnackBar("Error");
                               }
@@ -298,10 +307,12 @@ class _DetailScreenState extends State<DetailScreen> {
                               return;
                             }
                             if (await canLaunch(url())) {
-                              await launch(url());
+                              await saveOrder(url(), false);
+                              // await launch(url());
                             } else {
                               showInSnackBar("Error");
                             }
+
                             launchMailto();
                           },
                         ),
@@ -313,7 +324,8 @@ class _DetailScreenState extends State<DetailScreen> {
                             onPressed: () async {
                               final url = "tel:+97124412297";
                               if (await canLaunch(url)) {
-                                await launch(url);
+                                await saveOrder(url, false);
+                                // await launch(url);
                               } else {
                                 showInSnackBar("Error");
                               }
@@ -324,14 +336,17 @@ class _DetailScreenState extends State<DetailScreen> {
                             height: screenHeight * 0.12,
                             width: screenWidth * 0.25,
                             onPressed: () async {
+                              // var url =
+                              //     'https://www.instagram.com/domestic.ae/';
                               var url =
-                                  'https://www.instagram.com/domestic.ae/';
+                                  'https://www.instagram.com/tadbeerbawabat/';
 
                               if (await canLaunch(url)) {
-                                await launch(
+                                await saveOrder(url, true);
+                                /* await launch(
                                   url,
                                   universalLinksOnly: true,
-                                );
+                                );*/
                               } else {
                                 throw 'There was a problem to open the url: $url';
                               }
@@ -382,7 +397,7 @@ class _DetailScreenState extends State<DetailScreen> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(width: 2, color: Colors.blue),
+              border: Border.all(width: 2, color: Color(0xffff0000)),
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -390,6 +405,164 @@ class _DetailScreenState extends State<DetailScreen> {
                 image,
                 fit: BoxFit.contain,
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  saveOrder(String url, bool isUniversal) async {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      Get.dialog(dialogWidget(url, isUniversal));
+      return;
+    }
+
+    var order = OrderModel();
+    order.name = name.text;
+    order.phone = mobile.text;
+    order.email = email.text;
+    order.location = this.place;
+    order.service = widget.title;
+    final DateTime now = DateTime.now();
+    final DateFormat formatter = DateFormat('MMM dd, yyyy');
+    order.createdOn = formatter.format(now);
+    order.orderId = "CS${DateTime.now().millisecondsSinceEpoch}";
+
+    if (isUniversal) {
+      await launch(
+        url,
+        universalLinksOnly: true,
+      );
+    } else {
+      await launch(url);
+    }
+    await repo.saveActiveOrder(order);
+  }
+
+  Widget dialogWidget(String url, bool isUniversal) {
+    return Material(
+      color: CustomColors.dialogBg,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: Get.width * 0.9,
+            color: Colors.white,
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Text(
+                  "Alert!",
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: CustomColors.primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    translate(Keys.dialogText),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.blueGrey,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(
+                  height: 32,
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: InkWell(
+                        onTap: () {
+                          Get.back();
+                          Get.off(Login());
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: CustomColors.primaryColor,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8),
+                              )),
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 4,
+                          ),
+                          child: Text(
+                            translate(Keys.login),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: CustomColors.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: InkWell(
+                        onTap: () async {
+                          Get.back();
+                          if (isUniversal) {
+                            await launch(
+                              url,
+                              universalLinksOnly: true,
+                            );
+                          } else {
+                            await launch(url);
+                          }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: CustomColors.primaryColor,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8),
+                              )),
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 4,
+                          ),
+                          child: Text(
+                            translate(Keys.continueA),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: CustomColors.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ],

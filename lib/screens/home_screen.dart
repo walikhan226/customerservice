@@ -1,5 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:customerservice/constants/custom_colors.dart';
+import 'package:customerservice/screens/login.dart';
+import 'package:customerservice/screens/orders/activeOrders/view/activeOrders.dart';
+import 'package:customerservice/screens/orders/orderHistory/orderHistory.dart';
 import 'package:customerservice/screens/profile_screen.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../localization/keys.dart';
 import '../repositories/auth_repositories.dart';
 import 'detail_screen.dart';
@@ -75,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         key: _drawerKey,
         endDrawerEnableOpenDragGesture: false,
-        backgroundColor: Color(0xFF000a32),
+        backgroundColor: CustomColors.primaryColor,
         body: SafeArea(
           child: Column(
             children: [
@@ -95,15 +102,19 @@ class _HomeScreenState extends State<HomeScreen> {
                               _drawerKey.currentState.openDrawer();
                             },
                           )
-                        : BackButton(
+                        : //Container(),
+                        BackButton(
                             color: Colors.white,
+                            onPressed: () {
+                              Get.back();
+                            },
                           ),
                     FlutterToggleTab(
                       width: 50,
                       borderRadius: 30,
                       height: 40,
                       initialIndex: 0,
-                      selectedBackgroundColors: [const Color(0xFF0A3157)],
+                      selectedBackgroundColors: [const Color(0xFFff0000)],
                       selectedTextStyle: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -144,12 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: translate(Keys.List1_Title),
                         image: 'assets/images/1.jpeg',
                         onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return DetailScreen(
-                              title: translate(Keys.List1_Title),
-                            );
-                          }));
+                          openDetailPage(translate(Keys.List1_Title));
                         },
                       ),
                       listTile(
@@ -159,12 +165,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: translate(Keys.List2_Title),
                         image: 'assets/images/2.jpeg',
                         onPressed: () {
-                          Navigator.push(context,
+                          openDetailPage(translate(Keys.List2_Title));
+                          /* Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return DetailScreen(
                               title: translate(Keys.List2_Title),
                             );
-                          }));
+                          }));*/
                         },
                       ),
                       listTile(
@@ -174,12 +181,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: translate(Keys.List3_Title),
                         image: 'assets/images/3.jpeg',
                         onPressed: () {
-                          Navigator.push(context,
+                          openDetailPage(translate(Keys.List3_Title));
+                          /* Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return DetailScreen(
                               title: translate(Keys.List3_Title),
                             );
-                          }));
+                          }));*/
                         },
                       ),
                       listTile(
@@ -189,12 +197,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: translate(Keys.List4_Title),
                         image: 'assets/images/4.jpeg',
                         onPressed: () {
-                          Navigator.push(context,
+                          openDetailPage(translate(Keys.List4_Title));
+                          /* Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return DetailScreen(
                               title: translate(Keys.List4_Title),
                             );
-                          }));
+                          }));*/
                         },
                       ),
                       listTile(
@@ -204,12 +213,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: translate(Keys.List5_Title),
                         image: 'assets/images/5.jpeg',
                         onPressed: () {
-                          Navigator.push(context,
+                          openDetailPage(translate(Keys.List5_Title));
+                          /* Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return DetailScreen(
                               title: translate(Keys.List5_Title),
                             );
-                          }));
+                          }));*/
                         },
                       ),
                       listTile(
@@ -219,12 +229,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: translate(Keys.List6_Title),
                         image: 'assets/images/6.jpeg',
                         onPressed: () {
-                          Navigator.push(context,
+                          openDetailPage(translate(Keys.List6_Title));
+                          /* Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return DetailScreen(
                               title: translate(Keys.List5_Title),
                             );
-                          }));
+                          }));*/
                         },
                       ),
                       listTile(
@@ -234,12 +245,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: translate(Keys.List7_Title),
                         image: 'assets/images/6.jpeg',
                         onPressed: () {
-                          Navigator.push(context,
+                          openDetailPage(translate(Keys.List7_Title));
+                          /* Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return DetailScreen(
                               title: translate(Keys.List7_Title),
                             );
-                          }));
+                          }));*/
                         },
                       ),
                       listTile(
@@ -249,12 +261,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: translate(Keys.List8_Title),
                         image: 'assets/images/8.jpeg',
                         onPressed: () {
-                          Navigator.push(context,
+                          openDetailPage(translate(Keys.List8_Title));
+                          /* Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return DetailScreen(
                               title: translate(Keys.List8_Title),
                             );
-                          }));
+                          }));*/
                         },
                       ),
                     ],
@@ -319,6 +332,45 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
                 ListTile(
+                  leading: Icon(Icons.description_outlined),
+                  title: Text(
+                    translate(Keys.track),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onTap: () {
+                    Get.to(ActiveOrders());
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.assignment_outlined),
+                  title: Text(
+                    translate(Keys.history),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onTap: () {
+                    Get.to(OrderHistory());
+                  },
+                ),
+                /* ListTile(
+                  leading: FaIcon(FontAwesomeIcons.instagram),
+                  title: Text(
+                    translate(Keys.follow),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onTap: () async {
+                    await launch(
+                      "https://www.instagram.com/tadbeerbawabat/",
+                      universalLinksOnly: true,
+                    );
+                  },
+                ),*/
+                ListTile(
                   leading: Icon(Icons.logout),
                   title: Text(
                     translate(Keys.Logout),
@@ -327,10 +379,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   onTap: () {
+                    FirebaseAuth.instance.signOut();
+                    box.erase();
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(builder: (context) => Getstarted()),
                         (Route<dynamic> route) => false);
-                    box.erase();
                   },
                 ),
               ],
@@ -339,6 +392,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  void openDetailPage(String translate) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return DetailScreen(
+        title: translate,
+      );
+    }));
   }
 }
 
@@ -360,7 +421,7 @@ Widget listTile(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: Color(0xFF000a32),
+          color: CustomColors.primaryColor,
           width: 4,
         ),
       ),
@@ -403,12 +464,12 @@ Widget listTile(
             style: TextStyle(
               fontSize: width * 0.050,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF000a32),
+              color: CustomColors.primaryColor,
             ),
           ),
           Icon(
             Icons.arrow_forward_ios,
-            color: Color(0xFF000a32),
+            color: CustomColors.primaryColor,
           )
         ],
       ),

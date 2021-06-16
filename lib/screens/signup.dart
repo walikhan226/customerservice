@@ -259,7 +259,7 @@ class _SignUpState extends State<SignUp> {
                             top: _height / 3.4,
                             left: _width / 1.4,
                             child: FloatingActionButton(
-                              backgroundColor: CustomColors.primaryColor,
+                              backgroundColor: CustomColors.secondaryColor,
                               child: Icon(
                                 Icons.arrow_forward,
                                 size: _width * 0.08,

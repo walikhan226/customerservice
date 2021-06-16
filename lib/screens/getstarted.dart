@@ -41,12 +41,12 @@ class Getstarted extends StatelessWidget {
           ),
           Center(
             child: Padding(
-              padding: const EdgeInsets.only(left: 25),
+              padding: const EdgeInsets.only(left: 25, right: 25),
               child: Image.asset(
                 "assets/images/logo2.PNG",
                 fit: BoxFit.fill,
-                width: _width * 0.5,
-                height: _height * 0.13,
+                width: _width * 0.8,
+                height: _height * 0.24,
               ),
             ),
           ),

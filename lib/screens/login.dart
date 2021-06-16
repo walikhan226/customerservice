@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:ars_progress_dialog/ars_progress_dialog.dart';
+import 'package:customerservice/models/user_model.dart';
+import 'package:customerservice/screens/forgotPassword/forgotPassword.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '../constants/custom_colors.dart';
 import '../repositories/auth_repositories.dart';
@@ -45,10 +48,10 @@ class _LoginState extends State<Login> {
                   await _authRepository.signInWithGoogle().then((_) async {
                 print(_.user.email);
 
-                box.write("email", _.user.email);
+                /*  box.write("email", _.user.email);
                 box.write("name", _.user.displayName);
                 box.write("number", _.user.phoneNumber);
-                box.write("islogin", true);
+                box.write("islogin", true);*/
 
                 progressDialog.dismiss();
                 Navigator.pushReplacement(
@@ -63,7 +66,7 @@ class _LoginState extends State<Login> {
               });
             } catch (e) {
               progressDialog.dismiss();
-              showInSnackBar("Error");
+              showInSnackBar("Error :$e");
             }
           },
           child: CircleAvatar(
@@ -82,28 +85,39 @@ class _LoginState extends State<Login> {
             progressDialog.show();
             try {
               // by default the login method has the next permissions ['email','public_profile']
-              AccessToken accessToken = await FacebookAuth.instance.login();
-              print(accessToken.toJson());
-              // get the user data
-              final userData = await FacebookAuth.instance.getUserData();
-
-              print(userData);
-              box.write("email", userData['email']);
+              // AccessToken accessToken = await FacebookAuth.instance.login();
+              final LoginResult result = await FacebookAuth.instance
+                  .login(permissions: [
+                'public_profile',
+                'email'
+              ]); // by default we request the email and the public profile// or FacebookAuth.i.login()
+              print("RESULT: ${result.message}");
+              if (result.status == LoginStatus.success) {
+                // you are logged
+                final AccessToken accessToken = result.accessToken;
+                print("Token: ${accessToken.toJson()}");
+                // get the user data
+                final userData = await FacebookAuth.instance.getUserData();
+                print("PROFILE ${userData}");
+                /*   box.write("email", userData['email']);
               box.write("name", userData['name']);
-              box.write("islogin", true);
-              progressDialog.dismiss();
-
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomeScreen(
-                    loggedin: true,
+              box.write("islogin", true);*/
+                await _authRepository.loginUsingFirebase(userData, accessToken);
+                print("RRRRRR: PASS");
+                progressDialog.dismiss();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(
+                      loggedin: true,
+                    ),
                   ),
-                ),
-              );
+                );
+              }
             } catch (e) {
-              print(e.message.toString());
+              print("FACEBOOk ERR: ${e.message.toString()}");
               progressDialog.dismiss();
+              Get.snackbar("Error!", e.message.toString());
             }
           },
           child: CircleAvatar(
@@ -173,8 +187,8 @@ class _LoginState extends State<Login> {
         print(result.user.email);
         print('Sucessfully logged in');
 
-        box.write("email", result.user.email);
-        box.write("islogin", true);
+        var user = await _authRepository.getUserDetail(result.user.uid);
+        saveDataLocal(user);
 
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) {
@@ -336,6 +350,30 @@ class _LoginState extends State<Login> {
                                         ),
                                       ),
                                     ),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: _width * 0.09,
+                                      ),
+                                      alignment: Alignment.centerRight,
+                                      child: InkWell(
+                                        onTap: () {
+                                          Get.to(ForgotPassword())
+                                              .then((value) {
+                                            if (value == 1) {
+                                              Get.snackbar("Success!",
+                                                  "Password link sent to your email id");
+                                            }
+                                          });
+                                        },
+                                        child: Text(
+                                          "Forgot Password?",
+                                          style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                     Padding(
                                       padding: EdgeInsets.only(
                                         left: _width * 0.09,
@@ -343,12 +381,15 @@ class _LoginState extends State<Login> {
                                       ),
                                       child: Text(
                                         "Or login using your social media account",
-                                        style:
-                                            TextStyle(color: Color(0xFFAA9797)),
+                                        style: TextStyle(
+                                          color: Color(0xFFAA9797),
+                                        ),
                                       ),
                                     ),
                                     sociallogin(),
-                                    appleLogin(),
+                                    GetPlatform.isIOS
+                                        ? appleLogin()
+                                        : Container(),
                                     Padding(
                                       padding: EdgeInsets.only(
                                         left: _width * 0.09,
@@ -397,7 +438,7 @@ class _LoginState extends State<Login> {
                             top: _height / 3.4,
                             left: _width / 1.4,
                             child: FloatingActionButton(
-                                backgroundColor: CustomColors.primaryColor,
+                                backgroundColor: CustomColors.secondaryColor,
                                 child: Icon(
                                   Icons.arrow_forward,
                                   size: _width * 0.08,
@@ -437,16 +478,18 @@ class _LoginState extends State<Login> {
       ),
       child: SignInWithAppleButton(
         onPressed: () async {
-          final credential = await SignInWithApple.getAppleIDCredential(
+          final appleIdCredential = await SignInWithApple.getAppleIDCredential(
             scopes: [
               AppleIDAuthorizationScopes.email,
               AppleIDAuthorizationScopes.fullName,
             ],
           );
 
-          print(credential);
-          box.write("email", credential.email);
+          print(appleIdCredential);
+          box.write("email", appleIdCredential.email);
           box.write("islogin", true);
+
+          await _authRepository.saveAppleUserToFirebase(appleIdCredential);
 
           // progressDialog.dismiss();
           Navigator.pushReplacement(
@@ -461,5 +504,12 @@ class _LoginState extends State<Login> {
         },
       ),
     );
+  }
+
+  void saveDataLocal(UserModel user) {
+    box.write("email", user.email);
+    box.write("name", user.username);
+    box.write("number", user.number);
+    box.write("islogin", true);
   }
 }

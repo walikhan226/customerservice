@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:customerservice/constants/custom_colors.dart';
 import 'package:customerservice/localization/keys.dart';
 import 'package:customerservice/models/user_model.dart';
+import 'package:customerservice/screens/updatePassword/updatePassword.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -24,7 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFF000a32),
+        backgroundColor: CustomColors.primaryColor,
         title: Text(
           translate(Keys.Profile),
           style: TextStyle(fontWeight: FontWeight.w600),
@@ -45,7 +49,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 print(snapshot.data.data());
                 return SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 50),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 30, horizontal: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -53,7 +58,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         // CircleAvatar(
                         //   backgroundImage:snapshot.data.data()['imageUrl'] AssetImage('assets/images/profile.jpeg'),
                         // ),
-                        Row(
+                        ListTile(
+                          title: Text(
+                            translate(Keys.Name),
+                            style: TextStyle(
+                              fontSize: screenHeight * 0.02,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          trailing: Text(
+                            snapshot.data.data()['username'] ?? '',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            softWrap: true,
+                            style: TextStyle(
+                              fontSize: screenHeight * 0.02,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        ListTile(
+                          title: Text(
+                            translate(Keys.Email),
+                            style: TextStyle(
+                              fontSize: screenHeight * 0.02,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          trailing: Text(
+                            snapshot.data.data()['email'] ?? '',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            softWrap: true,
+                            style: TextStyle(
+                              fontSize: screenHeight * 0.02,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        ListTile(
+                          title: Text(
+                            translate(Keys.Phone_Number),
+                            style: TextStyle(
+                              fontSize: screenHeight * 0.02,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          trailing: Text(
+                            snapshot.data.data()['number'] ?? '',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            softWrap: true,
+                            style: TextStyle(
+                              fontSize: screenHeight * 0.02,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        /*  Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Expanded(
@@ -144,7 +212,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                           ],
-                        ),
+                        ),*/
                         SizedBox(height: screenHeight * 0.1),
                         GestureDetector(
                           onTap: () {
@@ -163,11 +231,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             width: screenWidth * 0.8,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Color(0xFF000a32),
+                              color: CustomColors.primaryColor,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
                               translate(Keys.Update),
+                              style: TextStyle(
+                                fontSize: screenHeight * 0.025,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 24),
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(UpdatePassword()).then((value) {
+                              if (value == 1) {
+                                Get.snackbar("Success!",
+                                    "Password updated successfully");
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: screenHeight * 0.07,
+                            width: screenWidth * 0.8,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: CustomColors.primaryColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              translate(Keys.UpdatePassword),
                               style: TextStyle(
                                 fontSize: screenHeight * 0.025,
                                 color: Colors.white,
@@ -242,6 +338,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           .collection('users')
                           .doc(FirebaseAuth.instance.currentUser.uid)
                           .update(UserModel().toMap(user));
+                      saveDataLocal(user);
                       setState(() {
                         isProfileUpdating = false;
                       });
@@ -251,7 +348,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: screenWidth * 0.8,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: Color(0xFF000a32),
+                        color: CustomColors.primaryColor,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -268,5 +365,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
     );
+  }
+
+  void saveDataLocal(UserModel user) {
+    var box = GetStorage();
+    box.write("email", user.email);
+    box.write("name", user.username);
+    box.write("number", user.number);
+    box.write("islogin", true);
   }
 }

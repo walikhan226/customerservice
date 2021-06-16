@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:customerservice/constants/custom_colors.dart';
+
 import 'getstarted.dart';
 import 'home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -85,7 +87,7 @@ class SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF000a32),
+      backgroundColor: CustomColors.primaryColor,
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -94,8 +96,8 @@ class SplashScreenState extends State<SplashScreen>
             children: <Widget>[
               new Image.asset(
                 'assets/images/logo.png',
-                width: animation.value * 600,
-                height: animation.value * 600,
+                width: animation.value * 400,
+                height: animation.value * 400,
               ),
             ],
           ),
